@@ -6,3 +6,5 @@ add a new rule to allow all ips from your private sub-net on port 3306
 
 ex: Rule INBOUND 3306 (MYSQL) 172.33.11.0/24
 use mysql workbench tcp/ssh and it will work (follow AndrewSmiley answer).
+
+2.
