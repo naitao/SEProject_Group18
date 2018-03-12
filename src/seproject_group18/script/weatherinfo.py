@@ -198,17 +198,20 @@ class Weatherinfo(Thread):
 
 
 '''
-# Weather info
-# Current weather info
+# WEATHER INFORMATION
+# Current weather info (2 ways)
 #weather_url = 'http://api.openweathermap.org/data/2.5/weather?id=2964574&appid=3641377121f997a81e12f28ba9831df1'
 #weather_url = 'http://api.openweathermap.org/data/2.5/weather?q=Dublin&appid=3641377121f997a81e12f28ba9831df1'
-#5 Days weather info
+
+# 5 Days weather info (Detailed weather information)
 weather_url = 'http://api.openweathermap.org/data/2.5/forecast/?id=7778677&mode=json&units=metric&APPID=19b104f014c41d11939f615df3a80edf'
 myweather = Weatherinfo(weather_url)
-#myweather.to_json()
+myweather.to_json()
 myweather.to_csv()
+
 # Only for the first time for creating table
 #myweather.import_to_mysql(mode='init')
+# Regulare updating DB with APIs
 myweather.import_to_mysql()
 '''
 
@@ -219,7 +222,8 @@ def main():
     while True:
         myweather.to_csv()
         myweather.import_to_mysql()
-        print("Weather info updated on DB :", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+        print("Weather information from APIs updated on DB (12 hours)")
+
         # Update weather information onto RDS every 12 hours
         time.sleep(3600*12)
 

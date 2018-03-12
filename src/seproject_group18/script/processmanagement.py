@@ -13,7 +13,6 @@ class ProcessManagement:
             output = ps.stdout.readline().strip()
         ps.stdout.close()
         ps.wait()
-        #print(lines)
         return lines
 
     def isProcessRunning(self):
@@ -33,7 +32,6 @@ class ProcessManagement:
         try:
             for pid_str in pids:
                 os.kill(int(pid_str), signal.SIGTERM)
-                #print("killed " + pid_str)
         except:
             pass
         return not self.isProcessRunning()
@@ -42,6 +40,6 @@ class ProcessManagement:
 #print(isProcessRunning('run.py'))
 # ProcessManagement([pattern1, pattern2, pattern3])
 # pattern1 or pattern2 + pattern3
-my_process = ProcessManagement(['run.py', 'run.py', 'allstart'])
+my_process = ProcessManagement(['run.py', 'dublinbike', 'allstart'])
 my_process.killProcessRunning()
 '''

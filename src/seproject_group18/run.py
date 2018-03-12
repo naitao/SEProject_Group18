@@ -5,17 +5,21 @@ from seproject_group18.script import bikeinfo, weatherinfo, processmanagement
 from multiprocessing import Process
 
 class StreamToLogger(object):
-   """
-   Fake file-like stream object that redirects writes to a logger instance.
-   """
-   def __init__(self, logger, log_level=logging.INFO):
-      self.logger = logger
-      self.log_level = log_level
-      self.linebuf = ''
+    """
+    Fake file-like stream object that redirects writes to a logger instance.
+    """
+    def __init__(self, logger, log_level=logging.INFO):
+        self.logger = logger
+        self.log_level = log_level
+        self.linebuf = ''
+        
 
-   def write(self, buf):
-      for line in buf.rstrip().splitlines():
-         self.logger.log(self.log_level, line.rstrip())
+    def write(self, buf):
+        for line in buf.rstrip().splitlines():
+            self.logger.log(self.log_level, line.rstrip())
+
+    def flush(self):
+        pass
 
 class WebServer(object):
     """ Threading example class
@@ -56,7 +60,6 @@ def runInParallel(*fns):
         p.join()
 
 def webserver_func():
-    print("booting web server...")
     app.run(host='0.0.0.0', port=5000)
 
 def main():
@@ -71,7 +74,7 @@ def main():
 
     if len(sys.argv) == 1:
         print(sys.argv[0] + " {webstart|dbstart|allstart|status|stop}")
-        sys.exit(1)
+        sys.exit(0)
     elif sys.argv[1] == 'status':
         my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'start'])
         if my_process.isProcessRunning():
@@ -82,6 +85,17 @@ def main():
         my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'start'])
         if my_process.killProcessRunning():
             print("Stopped!")
+    elif 'webstart' != sys.argv[1] and 'dbstart' != sys.argv[1] and 'allstart' != sys.argv[1]:
+        print(sys.argv[0] + " {webstart|dbstart|allstart|status|stop}")
+        sys.exit(0)
+
+    stdout_logger = logging.getLogger('STDOUT')
+    sl = StreamToLogger(stdout_logger, logging.INFO)
+    sys.stdout = sl
+
+    stderr_logger = logging.getLogger('STDERR')
+    sl = StreamToLogger(stderr_logger, logging.ERROR)
+    sys.stderr = sl
 
     fpid = os.fork()
     if fpid!=0:
@@ -92,13 +106,7 @@ def main():
         runInParallel(bikeinfo.main, weatherinfo.main)
     elif sys.argv[1] == 'allstart':
         runInParallel(bikeinfo.main, weatherinfo.main, webserver_func)
-    stdout_logger = logging.getLogger('STDOUT')
-    sl = StreamToLogger(stdout_logger, logging.INFO)
-    sys.stdout = sl
 
-    stderr_logger = logging.getLogger('STDERR')
-    sl = StreamToLogger(stderr_logger, logging.ERROR)
-    sys.stderr = sl
 
 if __name__ == "__main__": 
     main()

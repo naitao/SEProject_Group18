@@ -176,7 +176,7 @@ def main():
     while True:
         mybike.to_csv()
         mybike.import_to_mysql()
-        print("Bike info updated on DB :", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+        print("Bike information from APIs updated on DB (5mins)")
         # update bike information onto RDS every 5 mins
         time.sleep(300)
 
