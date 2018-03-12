@@ -24,7 +24,9 @@ def setup_package():
     needs_sphinx = {'build_sphinx', 'upload_docs'}.intersection(sys.argv)
     sphinx = ['sphinx'] if needs_sphinx else []
     setup(setup_requires=['pyscaffold>=3.0a0,<3.1a0'] + sphinx,
-          entry_points=entry_points,
+          entry_points={
+              'console_scripts':['dublinbike=seproject_group18.run:main']
+        },
           use_pyscaffold=True)
 
 

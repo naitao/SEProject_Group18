@@ -1,0 +1,4 @@
+1. Here is the key I got when registered on the website:
+7ecf9f5fd2eae31adbf96d743cae7c173f850c11
+2. For the data details, visit the following url:
+https://developer.jcdecaux.com/#/opendata/vls?page=dynamic
