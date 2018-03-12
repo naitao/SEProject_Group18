@@ -220,7 +220,8 @@ def main():
         myweather.to_csv()
         myweather.import_to_mysql()
         print("Weather info updated on DB :", datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
-        time.sleep(10)
+        # Update weather information onto RDS every 12 hours
+        time.sleep(3600*12)
 
 if __name__ == '__main__':
     main() 
