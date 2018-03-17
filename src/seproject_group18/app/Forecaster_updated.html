@@ -71,81 +71,68 @@
     function displayJSON(obj) 
     { 
         var daysArray    = obj.list;
-        var NumberOfDays = daysArray.length;
-        var showPressure = document.getElementById('idPres').checked; 
-        var showHumid    = document.getElementById('idHum').checked; 
-        var showWind     = document.getElementById('idWind').checked;     
+        var NumberOfDays = 8; //daysArray.length;  
         var quotes       = "\"";
         
         console.log("number of days:", NumberOfDays)
         console.log(daysArray)
+             
         
-        // lets check how many days user wants?
-        if (NumberOfDays <= 5)
-        {
-            NumberOfDays = 0;
-            if (document.getElementById('dayBox1').checked) {NumberOfDays = 1; }
-            if (document.getElementById('dayBox2').checked) {NumberOfDays = 2; }
-            if (document.getElementById('dayBox3').checked) {NumberOfDays = 3; }
-            if (document.getElementById('dayBox4').checked) {NumberOfDays = 4; }
-            if (document.getElementById('dayBox5').checked) {NumberOfDays = 5; }
+        // Main weather info - table header
+        weatherInfo += "<tr>";    
+        for (var i=0; i < NumberOfDays; i++) {
+          weatherInfo += "<td>" + daysArray[i].dt_txt + "</td>";
+        }
 
+        weatherInfo +="</tr><tr>";
+        for (var i=0; i < NumberOfDays; i++) {
+          weatherInfo += "<td><img src=icons/" + daysArray[i].weather[0].icon + ".png width=64 height=64></img></td>"; 
         }
-        else { NumberOfDays = 0; } // some error ? dont display anything..
         
-        //main weather info - table header
-        weatherInfo += "<tr><th>Date</th><th>Weather</th><th>Description</th><th>Temp Min</th><th>Temp Max</th></tr>";    
-    
-        //This loop populates weather table - generic information
-        for (var i=0; i < 40; i++) 
-        {    
-            /// Ad one row to the table. note that date is done as href and will be clickable
-            weatherInfo += "<tr><td>" +
-            "<a href="+quotes+"javascript:detailedShow(" +i+  ");" + quotes +"id="+quotes+"dayDetail"+i +quotes+">"     
-            + daysArray[i].dt_txt + "</a></td><td>" + daysArray[i].weather[0].icon + "   " 
-                      + daysArray[i].weather[0].main + "</td><td>" + daysArray[i].weather[0].description + "</td><td> +"
-            +daysArray[i].main.temp_min + "°C</td><td>"  + daysArray[i].main.temp_max + "°C</td></tr>";
+        weatherInfo +="</tr><tr>";
+        for (var i=0; i < NumberOfDays; i++)  {
+           weatherInfo += "<td>" + daysArray[i].weather[0].description + "</td>";
         }
+        
+        weatherInfo +="</tr><tr>";
+        for (var i=0; i < NumberOfDays; i++) {   
+            weatherInfo += "<td>"+daysArray[i].main.temp + "°C</td>";
+        }
+        
+        weatherInfo +="</tr><tr>";
+
+        for (var i=0; i < NumberOfDays; i++) {
+            weatherInfo += "<td>" + daysArray[i].main.humidity + "%</td>";
+        }
+        weatherInfo +="</tr><tr>";
+
+        for (var i=0; i < NumberOfDays; i++) {
+            weatherInfo +="<td>" + daysArray[i].wind.speed + "km/h</td>"
+        }
+        weatherInfo +="</tr>";
+        
+        
+                //main weather info - table header
+//        weatherInfo += "<tr><th>Date</th><th>Weather</th><th>Description</th><th>Temp</th><th>Humid</th><th>Wind</th></tr>";    
+  //  
+        //This loop populates weather table - generic information
+    //    for (var i=0; i < NumberOfDays; i++) 
+      //  {    
+        //    weatherInfo += "<tr><td>" +
+          //  "<a href="+quotes+"javascript:detailedShow(" +i+  ");" + quotes +"id="+quotes+"dayDetail"+i +quotes+">"     
+//            + daysArray[i].dt_txt + "</a></td><td>"
+                
+  //           + "<img src=icons/" + daysArray[i].weather[0].icon + ".png></img></td><td>" 
+
+    //         + daysArray[i].weather[0].description + "</td><td> +"
+      //      +daysArray[i].main.temp + "°C</td><td>"  + daysArray[i].main.humidity + "%</td>"
+    //        +"<td>" + daysArray[i].wind.speed + "km/h</td></tr>"
+    //    }
     
+        
         // Close the table element.
         weatherInfo += "</table>"; 
-    
-        // Another table with wind, pressure, humidity. Will only trigger if we set corresponding checkboxes
-        if (showPressure == true || showHumid == true || showWind == true)
-        {    
-            //This is second table with additional conditions that possibly can be shown
-            weatherInfo += "</br><table border = 1 ><tr><th>Date</th>";
-            
-            if (showPressure == true)   { weatherInfo +="<th>Pressure</th>"; }
-            if (showHumid == true)      { weatherInfo +="<th>Humidity</th>"; }
-            if (showWind == true)       { weatherInfo +="<th>Wind speed</th>"; }
-                    
-
-            //This loop populates weather table - generic information
-             for (i=0; i < NumberOfDays; i++) 
-             {    
-                    weatherInfo += "<tr><td>" + (19 +i) + "/10/2017</td>";
-                    if (showPressure == true)
-                    {
-                        weatherInfo +="<td>" + daysArray[i].main.pressure + "mBar</td>";
-                    }
-                 
-                    if (showHumid == true)
-                    {
-                        weatherInfo +="<td>" + daysArray[i].main.humidity + "%</td>";
-                    }
-                    
-                    if (showWind == true)
-                    {
-                        weatherInfo +="<td>" + daysArray[i].speed + "km/h</td>";
-                    }
-                    
-                    weatherInfo +="</tr>"; 
-             }
-             // Close the table element.
-            weatherInfo += "</table>"; 
-        } 
-        
+      
         // Finally, we constructed string. Lets assign it to actual HTML property
         document.getElementById("weatherId").innerHTML = weatherInfo;
     }
@@ -154,13 +141,10 @@
     </script>
       
 <div class="w3-container w3-teal">
-  <h1>This is the forecast for Dublin </h1>
+  <h1>This is the forecast for Dublin Bike Stations</h1>
 </div>
-    <p id="selection">This assignment focuses on the use of JavaScript to query a RESTful API and manipulate the JSON data</br>
-                      returned by the API. The data used in this assignment has been retrieved from the OpenWeatherMap API.</br>
-                      It provides a weather forecast for Dublin for five days, beginning on the 19th October.
-                      This data is presented in a webpage.</p>
-    <h3>My Google Maps Demo</h3>
+    <p id="selection">This part of code will display 24hrs weather forecast. It takes data from JSON file and
+      triggers using OnClick method</p>
     <div id="map"></div>
     <script>
       function initMap() {
@@ -182,19 +166,8 @@
       
     <form>
       </br>
-     <label for="user">Please select number of days for weather information: </label></br>
-
-      <input type="radio" name="days" id="dayBox1" value="1"> 1 day <br>
-      <input type="radio" name="days" id="dayBox2" value="2"> 2 days<br>
-      <input type="radio" name="days" id="dayBox3" value="3"> 3 days <br>
-      <input type="radio" name="days" id="dayBox4" value="4"> 4 days <br>
-      <input type="radio" name="days" id="dayBox5" value="5" checked="checked"> 5 days<br>
-      </br>
-  <input type="checkbox" name="showPre" id="idPres" checked="checked"> Show pressure <br>
-      <input type="checkbox" name="showHum" id="idHum" checked="checked"> Show humidity <br>
-      <input type="checkbox" name="showWind" id="idWind" checked="checked"> Show wind speed <br>
-    </br>
-  <button type ="button" onclick="changeSelection()" id="submitBtn">Click here to submit your choice</button>
+  
+  <button type ="button" onclick="changeSelection()" id="submitBtn">Click here to see weather</button>
 </br>
 </form>
  
@@ -205,7 +178,7 @@
     function changeSelection()
      {
         loadJSON();
-        weatherInfo  = "</br><table border = 1 >";
+        weatherInfo  = "</br><table border = 0 >";
     }        
 </script>
 
