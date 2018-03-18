@@ -68,7 +68,8 @@
             window.parsedObj = JSON.parse(xmlhttp.responseText); 
             
             // This function is defined below and deals with the JSON data parsed from the file. 
-            displayJSON(parsedObj, dispInt, currDate, 0, 0); 
+            //   NOTE: for test "coord":{"lat":53.3551,"lon":-6.2493},
+            displayWeather(parsedObj, dispInt, currDate, 53.3551, -6.2493); 
         }
     };
 
@@ -84,7 +85,7 @@
     //  currDateTime      - curent date/time for weather filter
     //  currLat, currLon  - lattitude/longitude - for location filter
     //
-    function displayJSON(obj, displayInterval, currDateTime, currLat, currLong) 
+    function displayWeather(obj, displayInterval, currDateTime, currLat, currLong) 
     { 
         var daysArray    = obj.list;
         var quotes       = "\"";
@@ -92,53 +93,60 @@
         var currDateTimeUTC = Math.floor(currDateTime.getTime() / 1000) 
         var startOffset = 0;
         
-        console.log("number of days :", NumberOfDays);
-        console.log("date/UTC timestamp  :", currDateTime, currDateTimeUTC);
+        //console.log("number of days :", NumberOfDays);
+        //console.log("date/UTC timestamp  :", currDateTime, currDateTimeUTC);
              
         for (var i=0; i< daysArray.length; i++) {
           if (daysArray[i].dt >= currDateTimeUTC) {
               break; }
             startOffset++;
         }
-        
-        console.log(startOffset);
-        
+            
         // new data, something to display
         if (startOffset < daysArray.length)
         {
+            if ( obj.city.coord.lat == currLat &&
+                  obj.city.coord.lon == currLong )
+            {
 
-            // Main weather info - table header
-            weatherInfo += "<tr>";    
-            for (var i=0; i < NumberOfDays; i++) {   
-              weatherInfo += "<td>" + daysArray[i+startOffset].dt_txt + "</td>";
+                // Main weather info - table header
+                weatherInfo += "<tr>";    
+                for (var i=0; i < NumberOfDays; i++) {  
+                   weatherInfo += "<td>" + daysArray[i+startOffset].dt_txt + "</td>";
+
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++) {
+                  weatherInfo += "<td><img src=icons/" + daysArray[i+startOffset].weather[0].icon + ".png width=64 height=64></img></td>"; 
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++)  {
+                   weatherInfo += "<td>" + daysArray[i+startOffset].weather[0].description + "</td>";
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++) {   
+                     weatherInfo += "<td>"+daysArray[i+startOffset].main.temp + "°C</td>";
+                }
+
+                weatherInfo +="</tr><tr>";
+
+                for (var i=0; i < NumberOfDays; i++) {
+                    weatherInfo += "<td>" + daysArray[i+startOffset].main.humidity + "%</td>";
+                }
+                weatherInfo +="</tr><tr>";
+
+                for (var i=0; i < NumberOfDays; i++) {
+                    weatherInfo +="<td>" + daysArray[i+startOffset].wind.speed + "km/h</td>"
+                }
+                weatherInfo +="</tr>";
             }
-
-            weatherInfo +="</tr><tr>";
-            for (var i=0; i < NumberOfDays; i++) {
-              weatherInfo += "<td><img src=icons/" + daysArray[i+startOffset].weather[0].icon + ".png width=64 height=64></img></td>"; 
+            else
+            {
+                weatherInfo +="<b>Undefined location lat:"+currLat+", lon:"+currLong+".</b>";    
             }
-
-            weatherInfo +="</tr><tr>";
-            for (var i=0; i < NumberOfDays; i++)  {
-               weatherInfo += "<td>" + daysArray[i+startOffset].weather[0].description + "</td>";
-            }
-
-            weatherInfo +="</tr><tr>";
-            for (var i=0; i < NumberOfDays; i++) {   
-                 weatherInfo += "<td>"+daysArray[i+startOffset].main.temp + "°C</td>";
-            }
-
-            weatherInfo +="</tr><tr>";
-
-            for (var i=0; i < NumberOfDays; i++) {
-                weatherInfo += "<td>" + daysArray[i+startOffset].main.humidity + "%</td>";
-            }
-            weatherInfo +="</tr><tr>";
-
-            for (var i=0; i < NumberOfDays; i++) {
-                weatherInfo +="<td>" + daysArray[i+startOffset].wind.speed + "km/h</td>"
-            }
-            weatherInfo +="</tr>";
         }
         else // no new weather data..
         {
