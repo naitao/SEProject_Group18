@@ -1,6 +1,6 @@
 import os, sys, time, subprocess
 import logging, threading
-from seproject_group18.app import app
+from seproject_group18.app import views
 from seproject_group18.script import bikeinfo, weatherinfo, processmanagement 
 from multiprocessing import Process
 
@@ -60,7 +60,7 @@ def runInParallel(*fns):
         p.join()
 
 def webserver_func():
-    app.run(host='0.0.0.0', port=5000)
+    views.app.run(host='0.0.0.0', port=5000, debug=True)
 
 def main():
     current_path = os.path.dirname(os.path.abspath(__file__))

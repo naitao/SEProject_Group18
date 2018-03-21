@@ -92,7 +92,7 @@ class Weatherinfo(Thread):
                             csv_values.append(data['list'][i][key]['speed'])
                             csv_values.append(data['list'][i][key]['deg'])
                         elif key is 'rain':
-                            if len(data['list'][i][key]) == 1:
+                            if 'rain' in data['list'][i] and len(data['list'][i][key]) == 1:
                                 csv_values.append(data['list'][i][key]['3h'])
                             else:
                                 csv_values.append(0)
