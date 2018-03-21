@@ -71,22 +71,33 @@ def main():
        filename=stdout,
        filemode='a'
     )
-
+    option_list = ['webstart', 'dbstart', 'allstart']
     if len(sys.argv) == 1:
-        print(sys.argv[0] + " {webstart|dbstart|allstart|status|stop}")
+        print(sys.argv[0] + " {webstart|dbstart|allstart|status|webstatus|stop|webstop}")
         sys.exit(0)
+    elif sys.argv[1] == 'webstatus':
+        my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'webstart'])
+        if my_process.isProcessRunning():
+            print("WebServer is running now!")
+        else:
+            print("WebServer is stopped!")
     elif sys.argv[1] == 'status':
         my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'start'])
         if my_process.isProcessRunning():
             print("It is running now!")
         else:
             print("It is stopped!")
-    elif sys.argv[1] == 'stop':
+    elif sys.argv[1] == 'stop' :
         my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'start'])
         if my_process.killProcessRunning():
-            print("Stopped!")
-    elif 'webstart' != sys.argv[1] and 'dbstart' != sys.argv[1] and 'allstart' != sys.argv[1]:
-        print(sys.argv[0] + " {webstart|dbstart|allstart|status|stop}")
+            print("All stopped!")
+    elif sys.argv[1] == 'webstop' :
+        my_process = processmanagement.ProcessManagement(['run.py', 'dublinbike', 'webstart'])
+        if my_process.killProcessRunning():
+            print("Web Server stopped!")
+    #elif 'webstart' != sys.argv[1] and 'dbstart' != sys.argv[1] and 'allstart' != sys.argv[1]:
+    elif sys.argv[1] not in option_list:
+        print(sys.argv[0] + " {webstart|dbstart|allstart|status|webstatus|stop|webstop}")
         sys.exit(0)
 
     stdout_logger = logging.getLogger('STDOUT')
@@ -106,7 +117,5 @@ def main():
         runInParallel(bikeinfo.main, weatherinfo.main)
     elif sys.argv[1] == 'allstart':
         runInParallel(bikeinfo.main, weatherinfo.main, webserver_func)
-
-
 if __name__ == "__main__": 
     main()
