@@ -128,6 +128,12 @@ class Weatherinfo(Thread):
 
             self.__csv_file = filename
 
+    def copy_jsonfile(self):
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        source = current_path + "/../../../data/Dublin_weather_updated.json"
+        dest = current_path + "/../app/static/Dublin_weather_updated.json"
+        os.system("cp {} {}".format(source, dest))
+
     def import_to_mysql(self, mode = 'update', csv_file=None,
                         mysql_host=None,
                         mysql_db=None,
@@ -220,9 +226,12 @@ def main():
     myweather = Weatherinfo(weather_url)
     myweather.to_csv()
     while True:
+        myweather.to_json()
         myweather.to_csv()
         myweather.import_to_mysql()
         print("Weather information from APIs updated on DB (12 hours)")
+        myweather.copy_jsonfile()
+        print("Weather information JSON is updated onto flask static folder (12 hours)")
 
         # Update weather information onto RDS every 12 hours
         time.sleep(3600*12)

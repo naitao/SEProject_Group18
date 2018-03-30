@@ -11,3 +11,10 @@ use mysql workbench tcp/ssh and it will work (follow AndrewSmiley answer).
 pip install mysql-python
 or
 sudo apt-get install python3-mysqldb
+
+3.sudo apt-get install python3-dev libmysqlclient-dev
+  pip install mysqlclient
+
+4. sudo pip install flask-mysql
+
+

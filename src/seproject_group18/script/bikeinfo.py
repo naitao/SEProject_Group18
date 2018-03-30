@@ -137,8 +137,14 @@ class Bikeinfo(Thread):
                     Name, Address, Latitude, Longitude, Banking, Bonus, Status, Bike_stands, Available_bike_stands, Available_bikes, Last_update)' \
                     'VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s") ON DUPLICATE KEY UPDATE Number="%s"',
                     [int(row[0]), row[1], row[2], float(row[3]), float(row[4]), row[5], row[6], row[7], int(row[8]), int(row[9]), int(row[10]), row[11], int(row[0])])
+            elif mode is 'incr':
+                print(row)
+                cursor.execute('INSERT INTO BikeStationHistory(Number, \
+                    Name, Address, Latitude, Longitude, Banking, Bonus, Status, Bike_stands, Available_bike_stands, Available_bikes, Last_update)' \
+                    'VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s") ON DUPLICATE KEY UPDATE Number="%s",Last_update="%s"',
+                    [int(row[0]), row[1], row[2], float(row[3]), float(row[4]), row[5], row[6], row[7], int(row[8]), int(row[9]), int(row[10]), row[11], int(row[0]), row[11]])
             elif mode is 'init':
-                cursor.execute('CREATE TABLE IF NOT EXISTS BikeStation( \
+                cursor.execute('CREATE TABLE IF NOT EXISTS BikeStationHistory( \
                     Number INT(10) PRIMARY KEY, \
                     Name VARCHAR(45), \
                     Address VARCHAR(45), \
@@ -161,11 +167,11 @@ class Bikeinfo(Thread):
 # Bike info
 bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'
 mybike = Bikeinfo(bike_url)
-mybike.to_json()
+#mybike.to_json()
 mybike.to_csv()
 # Only for the first time for creating table
 #mybike.import_to_mysql(mode='init')
-mybike.import_to_mysql()
+mybike.import_to_mysql(mode='incr')
 
 '''
 
@@ -176,6 +182,7 @@ def main():
     while True:
         mybike.to_csv()
         mybike.import_to_mysql()
+        mybike.import_to_mysql(mode='incr')
         print("Bike information from APIs updated on DB (5mins)")
         # update bike information onto RDS every 5 mins
         time.sleep(300)
