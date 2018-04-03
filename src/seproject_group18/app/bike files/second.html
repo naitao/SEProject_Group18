@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <style>
+        body {
+             background-image: url(milky-way-2695569_1920.jpg);
+        }
+        h1 {
+            text-align: center;
+            font-size: 40px;
+            color: white;
+        }
+        h2{
+            color: white;
+            text-align: center;
+        }
+    table, th, td {
+    border: 1px solid grey;
+    border-collapse: collapse;
+    padding: 5px;
+        text-align: center;
+}
+
+th {
+    background-color: black;
+    color: white;
+}
+      
+table tr:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+    background-color: #ffffff;
+}
+#vv {
+            display: inline-block;
+            background-color: black;
+            text-align: center;
+            width: 33%;
+    font-size: 17px;
+        }
+        #cc {
+            display: block;
+            background: black;
+        }
+        a {
+            color: white;
+        }
+        #vv:hover{border: 1px solid;
+             border-color: skyblue;
+             background-color: transparent;}
+        #demo1 {
+            font-size: 17px;
+            
+        }
+    </style>
+    <h1>The Five Days' Weather of Dublin after 19th October. </h1>
+    <div id="googleMap" style="width: 100%;height: 400px;"></div><br>
+    <h2> Select the weather information that you want to know.</h2>
+    <select id="number2">
+    <option value="1">Pressure</option>
+    <option value="2">Humidity</option>
+    <option value="3">Wind Speed</option>
+    </select>
+    <button type="button"  onclick="clicknum1()">Submit!</button>
+    <div id="demo1"></div><br>
+    <div id="cc"><div id="vv"><a href="main.html">Weather forcast</a></div>
+    <div id="vv"><a href="second.html">Pressure humidity and speed</a></div>
+        <div id="vv"><a href="third.html">The fine-grained weather</a></div></div>
+    
+    <script>
+function myMap() {
+var mapProp= {
+    center:new google.maps.LatLng(53.3551,-6.2493),
+    zoom:9,
+};
+var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+}
+</script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=myMap"></script>
+<script>
+
+function clicknum1(){
+    var xmlhttp = new XMLHttpRequest();
+    var url = "Daily.json";
+
+xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        
+        //Parse the JSON data to a JavaScript variable. 
+        var parsedObj = JSON.parse(xmlhttp.responseText);    
+        // This function is defined below and deals with the JSON data parsed from the file. 
+        displayJSON(parsedObj); 
+    }
+};
+
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+     function displayJSON(obj){
+        var tablelist1 = " ";
+        if(document.getElementById("number2").value == 1){
+         tablelist1 += "<table border=1><tr><th> Date </th><th> Pressure （hpa）</th><tr>";
+         for(i=0;i<obj.list.length;i++){
+            tablelist1 += "<tr><td>" + (i+19) + "</td><td>" + obj.list[i].pressure + "</td></tr>";
+            
+         }
+        tablelist1 += "</table>";}
+         else if(document.getElementById("number2").value == 2){
+             tablelist1 += "<table border=1><tr><th> Date </th><th> Humidity （%）</th><tr>";
+         for(j=0;j<obj.list.length;j++){
+            tablelist1 += "<tr><td>" + (j+19) + "</td><td>" + obj.list[j].humidity + "</td></tr>";
+            
+         }
+        tablelist1 += "</table>";
+         }
+         else if(document.getElementById("number2").value == 3){
+             tablelist1 += "<table border=1><tr><th> Date </th><th> Wind Speed (m/s) </th><tr>";
+         for(q=0;q<obj.list.length;q++){
+            tablelist1 += "<tr><td>" + (q+19) + "</td><td>" + obj.list[q].speed + "</td></tr>";
+            
+         }
+        tablelist1 += "</table>";
+         }
+        
+        document.getElementById("demo1").innerHTML = tablelist1;
+        }
+}
+    
+    </script>
+   
+    
+</body></html>
