@@ -46,4 +46,13 @@ def bike5json():
         return app.send_static_file("Dublin_bike_updated.json")
 @app.route('/charts.js/')
 def chartsjs():
+        return app.send_static_file("Charts.js")
+@app.route('/charts.min.js/')
+def chartsminjs():
+        return app.send_static_file("Chart.min.js")
+@app.route('/charts.bundle.js/')
+def chartsbundlejs():
+        return app.send_static_file("Chart.bundle.js")
+@app.route('/charts.bundle.min.js/')
+def chartsbundleminjs():
         return app.send_static_file("Chart.bundle.min.js")
