@@ -37,3 +37,13 @@ def bike():
 @app.route('/weather/icons/<name>') 
 def icon(name): 
         return render_template("{}".format(name))
+
+@app.route('/bike5/') 
+def bike5():
+        return render_template("bike5.html")
+@app.route('/bike5json/')
+def bike5json():
+        return app.send_static_file("Dublin_bike_updated.json")
+@app.route('/charts.js/')
+def chartsjs():
+        return app.send_static_file("Chart.bundle.min.js")
