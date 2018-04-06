@@ -17,4 +17,7 @@ sudo apt-get install python3-mysqldb
 
 4. sudo pip install flask-mysql
 
-
+5. insall charts.js
+sudo apt-get install npm
+#sudo npm install -g http-server
+sudo npm install chart.js --save
