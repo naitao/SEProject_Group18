@@ -35,7 +35,8 @@
             
             var xmlhttp = new XMLHttpRequest();
             //var url = "Dublin_bike_updated.json";
-            var url = "/bike5json/";
+            //var url = "/bike5json/";
+            var url = "https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11";
             xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         
@@ -110,5 +111,67 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
     </script>
+<div style="width: 100%; height: 100%;">
+    <canvas id="myChart" style="width: 100%; height: auto;"></canvas>
+</div>
+<div id="js-legend" class="chart-legend"></div>
+    	<script src="/charts.js/"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+  <script>
+  $.getJSON("/station_chart6/", function (json) {
+  // will generate array with ['Monday', 'Tuesday', 'Wednesday']
+  var labels = json.map(function(item) {
+    return item.clock;
+  });
+  var Rate = json.map(function(item){
+    return item.rate;
+  });
+  var RainRate = new Array(24);
+  var nonRainRate = new Array(24);
+  for (var i=0; i<Rate.length; i++){
+      	RainRate[i] = Rate[i].Rain;
+      	nonRainRate[i] = Rate[i].NonRain;
+  }
+  var newLabels = new Array(24);
+  for (var i=0;i<24;i++){
+      newLabels[i] = labels[i] + '\(Rain/NonRain\)';
+	}
+  var data = {
+    labels: newLabels,
+    datasets: [
+    {
+      label: "Rain",
+      fillColor: "rgba(220,220,220,0.5)",
+      strokeColor: "rgba(220,220,220,0.8)",
+      highlightFill: "rgba(220,220,220,0.75)",
+      highlightStroke: "rgba(220,220,220,1)",
+      data: RainRate
+    },
+    {
+      label: "NonRain",
+      fillColor: "rgba(10,87,105,0.5)",
+      strokeColor: "rgba(151,187,205,0.8)",
+      highlightFill: "rgba(151,187,205,0.75)",
+      highlightStroke: "rgba(151,187,205,1)",
+      data: nonRainRate
+    }
+    ]
+  };
+  var options = {
+      legend: { display: false },
+      title: {
+          display: true,
+          text: 'One week bike usage calculations'
+      }
+  };
+  var ctx = document.getElementById("myChart").getContext("2d");
+  ctx.canvas.width = 1400;
+  ctx.canvas.height = 300;
+
+  var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});
+});
+  </script>
   </body>
 </html>
