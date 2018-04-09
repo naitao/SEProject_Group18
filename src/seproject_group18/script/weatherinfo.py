@@ -4,6 +4,7 @@ import csv, json
 import codecs
 import MySQLdb
 import time
+from seproject_group18.script import dataAnalytic
 from threading import Thread
 
 class Weatherinfo(Thread):
@@ -224,6 +225,7 @@ myweather.import_to_mysql()
 def main():
     weather_url = 'http://api.openweathermap.org/data/2.5/forecast/?id=7778677&mode=json&units=metric&APPID=19b104f014c41d11939f615df3a80edf'
     myweather = Weatherinfo(weather_url)
+    myAnalytic = dataAnalytic.dataAnalytic()
     myweather.to_csv()
     while True:
         myweather.to_json()
@@ -232,6 +234,8 @@ def main():
         print("Weather information from APIs updated on DB (12 hours)")
         myweather.copy_jsonfile()
         print("Weather information JSON is updated onto flask static folder (12 hours)")
+        myAnalytic.writeToJson()       
+        print("Bike information analyzed data updated on JSON file")
 
         # Update weather information onto RDS every 12 hours
         time.sleep(3600*12)

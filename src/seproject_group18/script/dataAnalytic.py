@@ -163,8 +163,13 @@ class dataAnalytic:
 
         # timestamp
         now = int(time.time())
+        # 1 month ago
+        monthago = now - 2592000
         # 1 week ago
         weekago = now - 604800
+
+        # define how may days before
+        daysBefore = monthago
         # 3 hours interal
         interal = 3600*3
 
@@ -180,7 +185,7 @@ class dataAnalytic:
             t[row[0]] = [dateStr, [timestamp, end_timestamp], weather_main]
             row = cursor.fetchone()
         for key,value in t.items():
-            if int(key.strip("'")) >= weekago:
+            if int(key.strip("'")) >= daysBefore:
                 cursor.execute('select Weather_Main from WeatherDetails where Dt=%s', [key])
                 row_weather = cursor.fetchone()[0].strip("'")
                 oneWeekWeather[int(key.strip("'"))] = [row_weather, t[key][1]]

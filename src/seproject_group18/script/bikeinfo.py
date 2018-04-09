@@ -5,7 +5,6 @@ import codecs
 import MySQLdb
 import time
 from threading import Thread
-from seproject_group18.script import dataAnalytic
 
 class Bikeinfo(Thread):
     def __init__(self, url):
@@ -178,14 +177,11 @@ mybike.import_to_mysql(mode='incr')
 def main():
     bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'
     mybike = Bikeinfo(bike_url)
-    myAnalytic = dataAnalytic.dataAnalytic()
     while True:
         mybike.to_csv()
         mybike.import_to_mysql()
         mybike.import_to_mysql(mode='incr')
         print("Bike information from APIs updated on DB (5mins)")
-        myAnalytic.writeToJson()       
-        print("Bike information analyzed data updated on JSON file")
 
         # update bike information onto RDS every 5 mins
         time.sleep(300)
