@@ -67,3 +67,6 @@ def chartsbundleminjs():
 @app.route('/station_chart6/')
 def chart6():
         return app.send_static_file("Dublin_Chart_6.json")
+@app.route('/station_chart7/')
+def chart7():
+        return app.send_static_file("Dublin_Chart_7.json")
