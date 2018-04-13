@@ -1,0 +1,188 @@
+<!DOCTYPE html >
+<html>
+  <head>
+    <style type="text/css">
+    form {
+        display: inline-block; //Or display: inline; 
+    }
+    </style>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Information of Bike Station</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+         width: 100%;
+             height: 400px;
+             background-color: grey;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div>
+	<form id="temp_form" name="form1" action="#">
+		<label for="temp">Temp</label>
+    	<select id="temp" name="temp" style="font-family : monospace; font-size : 10pt">
+      	<option value="1">-5~0℃</option>
+	  	<option value="2">1~10℃</option>
+	  	<option value="3">11~20℃</option>
+	  	<option value="4">20~30℃</option>
+	  	<option value="5">30~40℃</option>		
+		</select>
+	</form>
+	<form id="humidity_form" name="form2" action="#">
+		<label for="humidity">humidity</label>
+    	<select id="humidity" name="humidity" style="font-family : monospace; font-size : 10pt">
+      	<option value="1">30~60</option>
+	  	<option value="2">61~70</option>
+	  	<option value="3">71~80</option>
+	  	<option value="4">81~90</option>
+	  	<option value="5">91~100</option>		
+	  	<option value="6">101~120</option>		
+		</select>
+	</form>
+	<form id="weather" name="form3" action="#">
+		<label for="weather">weather</label>
+    	<select id="weather" name="weather" style="font-family : monospace; font-size : 10pt">
+      	<option value="1">Rain</option>
+	  	<option value="2">Snow</option>
+	  	<option value="3">Cloud</option>
+	  	<option value="4">Sunny</option>
+		</select>
+	</form>
+	<form id="rainValue" name="form4" action="#">
+		<label for="rainValue">Rain 3H</label>
+    	<select id="rainValue" name="rainValue" style="font-family : monospace; font-size : 10pt">
+      	<option value="1">0-50</option>
+	  	<option value="2">51-100</option>
+	  	<option value="3">101-150</option>
+	  	<option value="4">150-200</option>
+	  	<option value="4">201-300</option>
+	  	<option value="4">Over 300</option>
+		</select>
+	</form>
+	<form id="wind" name="form5" action="#">
+		<label for="wind">wind speed</label>
+    	<select id="wind" name="wind" style="font-family : monospace; font-size : 10pt">
+      	<option value="1">0-5</option>
+	  	<option value="2">6-10</option>
+	  	<option value="3">11-15</option>
+	  	<option value="4">16-20</option>
+	  	<option value="4">Over 20</option>
+		</select>
+	</form>
+	<button id="mybutton" type="button"> Submit </button>		
+    
+	<form action="#" id='switch'>
+		<input type="checkbox" name="subscribe" onclick="addMoreInfo()">
+    	<label>Subscribe additional weather informations</label>
+	</form>
+	<button id="page02" style="position:relative; left:5px; top: 10px; display: none" onclick="recallRequired()">Go back to Weather Summary </button>
+    </div>
+
+    <script>
+
+        function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(53.3551, -6.2493),
+          zoom: 12
+        });
+   
+            
+            var xmlhttp = new XMLHttpRequest();
+            //var url = "Dublin_bike_updated.json";
+            //var url = "/bike5json/";
+            var url = "https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11";
+            xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        
+        //Parse the JSON data to a JavaScript variable. 
+                    var parsedObj = JSON.parse(xmlhttp.responseText);    
+        // This function is defined below and deals with the JSON data parsed from the file.
+                displayInfo(parsedObj);
+    		}
+	};
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+        function displayInfo(obj){
+            for(var i=0;i<obj.length;i++){
+                var infoWindow = new google.maps.InfoWindow;
+                var number = obj[i].number;
+                var name = obj[i].name;
+                var address = obj[i].address;
+                var available_bikes = obj[i].available_bikes;
+                var available_bike_stands = obj[i].available_bike_stands;
+                var bike_stands = obj[i].bike_stands;
+                var banking = obj[i].banking;
+                var lat = obj[i].position.lat;
+                var lng = obj[i].position.lng;
+                var position = new google.maps.LatLng(parseFloat(lat),parseFloat(lng));
+
+                var infowincontent = document.createElement('div');
+              
+                var strong = document.createElement('strong');
+                strong.textContent = "Station no. " + number
+                infowincontent.appendChild(strong);
+                infowincontent.appendChild(document.createElement('br'));
+
+                var text1 = document.createElement('text');
+                text1.textContent = "Full address: " + address
+                infowincontent.appendChild(text1);
+                infowincontent.appendChild(document.createElement('br'));
+                
+                var text2 = document.createElement('text');
+                text2.textContent = "Available bikes: " + available_bikes
+                infowincontent.appendChild(text2);
+                infowincontent.appendChild(document.createElement('br'));
+                
+                var text3 = document.createElement('text');
+                text3.textContent = "Free stands: " + available_bike_stands
+                infowincontent.appendChild(text3);
+                infowincontent.appendChild(document.createElement('br'));
+                
+                var text4 = document.createElement('text');
+                text4.textContent = "Total capacity: " + bike_stands
+                infowincontent.appendChild(text4);
+                infowincontent.appendChild(document.createElement('br'));
+            
+                var text5 = document.createElement('text');
+                text5.textContent = "Banking: " + banking
+                infowincontent.appendChild(text5);
+              
+               
+                var marker = new google.maps.Marker({map: map,
+                                                     position: position,
+                                                     label: number.toString(),
+                                                     infowincontent: infowincontent});
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.setContent(this.infowincontent);
+                    infoWindow.open(map, this);
+                });
+
+            }
+          }
+        }
+        
+         
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
+    </script>
+<div style="width: 100%; height: 100%;">
+    <canvas id="myChart" style="width: 100%; height: auto;"></canvas>
+</div>
+<div id="js-legend" class="chart-legend"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+  </body>
+</html>
