@@ -9,22 +9,39 @@
       function drawVisualization() {
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable([
-         ['Date',         'Activity per day', 'Temp.,C' ],
-         ['2018-03-06',  140,      185.1],
-         ['2018-03-07',  163,      188.2],
-         ['2018-03-08',  195,      207.2],
-         ['2018-03-09',  185,      198.2],
-         ['2018-03-10',  157,      176.3],
-         ['2018-03-11',  139,      175.8],
-         ['2018-03-12',  160,      186.5]
+         ['Station',     'Availability'],
+              ['1', 24], 
+              ['2', 30], 
+              ['3', 31],
+              ['4', 25],
+              ['5', 27],
+              ['6', 30], 
+              ['7', 31],
+              ['8', 30], 
+              ['9', 25],
+              ['10', 28],
+              ['11', 30],
+              ['12', 24],
+              ['13', 34],
+              ['14', 25], 
+              ['15', 27],
+              ['16', 29],
+              ['17', 30],
+              ['18', 15],
+              ['19', 24],
+              ['20', 33],
+              ['21', 27],
+              ['22', 38],
+              ['23', 25],
+              ['24', 32]
       ]);
 
     var options = {
-      title : 'Dependancy of bike rentals on the temperature',
-      vAxis: {title: 'Activity per day'},
-      hAxis: {title: 'Date'},
+      title : 'Bike availability per station',
+      vAxis: {title: 'Bike availability'},
+      hAxis: {title: 'Stations'},
       seriesType: 'bars',
-      series: {1: {type: 'line'}}
+   //   series: {1: {type: 'line'}}
     };
 
     var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
