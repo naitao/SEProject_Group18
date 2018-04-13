@@ -36,6 +36,9 @@ def bike():
         
         returnDict['rate'], returnDict['bikeStands'] = "A", "B"
         return render_template("bike.html", **returnDict)
+@app.route('/bikeReview/') 
+def bikeAnalytics(): 
+        return render_template("bikeReview.html")
 
 @app.route('/weather/icons/<name>') 
 def icon(name): 

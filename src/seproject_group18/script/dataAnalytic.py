@@ -150,6 +150,33 @@ class dataAnalytic:
         return totalBikeStands, staticsRates
 
     
+    def getOneMonthData(self, weather_dict, bike_dict): 
+        try:
+            mydb = MySQLdb.connect(host= self.__mysql_host,
+                                   user = self.__mysql_user,
+                                   passwd = self.__mysql_password,
+                                   db = self.__bike_db)
+            cursor = mydb.cursor()
+        except Exception as e:
+            print(str(e))
+
+        intervalRate = []
+        intervalRecord = {}
+        cursor.execute('select * from BikeStationHistory')
+        row = cursor.fetchone()
+        while row is not None:
+            new_row = []
+            stationID = row[0]
+            timestamp = int(row[11].strip("'"))
+            clock = int((timestamp/1000) % (3600*24) / 3600)
+            Available_bike_stands = row[9]
+            Bike_stands = row[10]
+            new_row = [stationID, Available_bike_stands, Bike_stands, clock, timestamp/1000]
+            print(new_row)
+            break
+            row = cursor.fetchone()
+        mydb.commit()
+        cursor.close()
 
     def __getWeatherData(self):
         try:
@@ -210,6 +237,19 @@ class dataAnalytic:
             print(e)
         f.close()
 
+    def createInputData(self):
+        '''This will create a simple dictionary for weather and bike'''
+        Weather_Main = ['Rain','Clouds','Clear']
+        weather_dict = {'Temp': 10,
+                        'Humidity': 80,
+                        'Weather_Main': 'Rain',
+                        'Wind_speed': 20,
+                        'Rain3H': 250}
+        bike_dict = {'Number':1,
+                     'Clock':1}
+        return weather_dict, bike_dict
+  
+
 
 
 def main():
@@ -222,7 +262,9 @@ def main():
     #print(rates, bikeStands)
 #dict = myAnalytic.getOneDayPerWeekBikeData()
 #print(dict)
-    myAnalytic.writeToJson()
+    #myAnalytic.writeToJson()
+    weather_dict, bike_dict = myAnalytic.createInputData()
+    myAnalytic.getOneMonthData(weather_dict, bike_dict)
 
 
 if __name__ == '__main__': 

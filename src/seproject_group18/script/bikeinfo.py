@@ -138,10 +138,12 @@ class Bikeinfo(Thread):
                     'VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s") ON DUPLICATE KEY UPDATE Number="%s"',
                     [int(row[0]), row[1], row[2], float(row[3]), float(row[4]), row[5], row[6], row[7], int(row[8]), int(row[9]), int(row[10]), row[11], int(row[0])])
             elif mode is 'incr':
+                timestamp = int(row[11].strip("'"))
+                clock = int((timestamp/1000) % (3600*24) / 3600)
                 cursor.execute('INSERT INTO BikeStationHistory(Number, \
-                    Name, Address, Latitude, Longitude, Banking, Bonus, Status, Bike_stands, Available_bike_stands, Available_bikes, Last_update)' \
-                    'VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")',
-                    [int(row[0]), row[1], row[2], float(row[3]), float(row[4]), row[5], row[6], row[7], int(row[8]), int(row[9]), int(row[10]), row[11]])
+                    Name, Address, Latitude, Longitude, Banking, Bonus, Status, Bike_stands, Available_bike_stands, Available_bikes, Last_update, Clock)' \
+                    'VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")',
+                    [int(row[0]), row[1], row[2], float(row[3]), float(row[4]), row[5], row[6], row[7], int(row[8]), int(row[9]), int(row[10]), row[11], clock])
             elif mode is 'init':
                 cursor.execute('CREATE TABLE IF NOT EXISTS BikeStationHistory( \
                     Number INT(10) PRIMARY KEY, \
