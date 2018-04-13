@@ -29,17 +29,17 @@
         function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(53.3551, -6.2493),
-          zoom: 12
+          zoom: 13
         });
-   
-            
+
+
             var xmlhttp = new XMLHttpRequest();
             var url = "Dublin_bike_updated.json";
             xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        
-        //Parse the JSON data to a JavaScript variable. 
-                    var parsedObj = JSON.parse(xmlhttp.responseText);    
+
+        //Parse the JSON data to a JavaScript variable.
+                    var parsedObj = JSON.parse(xmlhttp.responseText);
         // This function is defined below and deals with the JSON data parsed from the file.
                 displayInfo(parsedObj);
     }
@@ -56,12 +56,14 @@ xmlhttp.send();
                 var available_bike_stands = obj[i].available_bike_stands;
                 var bike_stands = obj[i].bike_stands;
                 var banking = obj[i].banking;
+                var bonus = obj[i].bonus;
+                var status = obj[i].status;
                 var lat = obj[i].position.lat;
                 var lng = obj[i].position.lng;
                 var position = new google.maps.LatLng(parseFloat(lat),parseFloat(lng));
 
                 var infowincontent = document.createElement('div');
-              
+
                 var strong = document.createElement('strong');
                 strong.textContent = "Station no. " + number
                 infowincontent.appendChild(strong);
@@ -71,40 +73,197 @@ xmlhttp.send();
                 text1.textContent = "Full address: " + address
                 infowincontent.appendChild(text1);
                 infowincontent.appendChild(document.createElement('br'));
-                
+
                 var text2 = document.createElement('text');
                 text2.textContent = "Available bikes: " + available_bikes
                 infowincontent.appendChild(text2);
                 infowincontent.appendChild(document.createElement('br'));
-                
+
                 var text3 = document.createElement('text');
                 text3.textContent = "Free stands: " + available_bike_stands
                 infowincontent.appendChild(text3);
                 infowincontent.appendChild(document.createElement('br'));
-                
+
                 var text4 = document.createElement('text');
                 text4.textContent = "Total capacity: " + bike_stands
                 infowincontent.appendChild(text4);
                 infowincontent.appendChild(document.createElement('br'));
-            
+
                 var text5 = document.createElement('text');
                 text5.textContent = "Banking: " + banking
                 infowincontent.appendChild(text5);
-              
-              
-                var marker = new google.maps.Marker({map: map, position: position});
-                marker.addListener('click', function() {
-                    infoWindow.setContent(infowincontent);
-                    infoWindow.open(map, marker);
+                infowincontent.appendChild(document.createElement('br'));
+
+                var text6 = document.createElement('text');
+                text6.textContent = "Bonus: " + bonus
+                infowincontent.appendChild(text6);
+                infowincontent.appendChild(document.createElement('br'));
+
+                var text7 = document.createElement('text');
+                text7.textContent = "Status: " + status
+                infowincontent.appendChild(text7);
+
+
+                var marker = new google.maps.Marker({map: map,
+                                                         position: position,
+                                                         infowincontent: infowincontent});
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.setContent(this.infowincontent);
+                    infoWindow.open(map, this);
                 });
             }
           }
         }
-        
-         
+
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
     </script>
+      <div id="test">111</div>
+
+      <div style="width: 100%; height: 100%;">
+    <canvas id="myChart1" width="740" height="200"></canvas>
+      </div>
+      <div id="test1">121</div>
+      <div style="width: 100%; height: 100%;">
+    <canvas id="myChart2" width="740" height="200"></canvas>
+      </div>
+    <script src="Chart.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+    <script>
+        // chart1
+    $.getJSON("Dublin_bike_updated.json", function (json) {
+    var labels = json.map(function(item) {
+      return item.name;
+    });
+    var availableBikes = json.map(function(item){
+      return item.available_bikes;
+    });
+        // Find the top 10 stations;
+    var isSwap;
+    var temp1;
+    var temp2;
+    // sort
+    for(var i=0; i< availableBikes.length;i++){
+        isSwap = false;
+        for (var j = 0; j< availableBikes.length - 1 - i;j++){
+            if(availableBikes[j]<availableBikes[j+1]){
+                isSwap = true;
+                temp1 = availableBikes[j+1];
+                availableBikes[j+1] = availableBikes[j];
+                availableBikes[j] = temp1;
+                temp2 = labels[j+1];
+                labels[j+1] = labels[j];
+                labels[j] = temp2;
+            }
+        }
+        
+    }
+        
+    var NewBikes = new Array(10);
+    var NewLabels = new Array(10);
+    for (var k = 0; k<10;k++){
+        NewBikes[k] = availableBikes[k];
+        NewLabels[k] = labels[k];
+    }
+    document.getElementById("test").innerHTML = NewLabels.length;
+ 
+    var data = {
+      labels: NewLabels,
+      datasets: [
+      {
+        label: "available bikes",
+        fillColor: "rgba(10,87,105,0.5)",
+        strokeColor: "rgba(151,187,205,0.8)",
+        highlightFill: "rgba(151,187,205,0.75)",
+        highlightStroke: "rgba(151,187,205,1)",
+        data: NewBikes
+      }
+      ]
+    };
+    var options = {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Find the best 10 stations to take bikes '
+        }
+    };
+    var ctx = document.getElementById("myChart1").getContext("2d");
+    ctx.canvas.width = 1400;
+    ctx.canvas.height = 300;
+
+    var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});
+  });
+    </script>
+      
+    <script>
+      //chart2
+    $.getJSON("Dublin_bike_updated.json", function (json) {
+    var labels = json.map(function(item) {
+      return item.name;
+    });
+    var availableBikes = json.map(function(item){
+      return item.available_bike_stands;
+    });
+        // Find the top 10 stations;
+    var isSwap;
+    var temp1;
+    var temp2;
+    // sort
+    for(var i=0; i< availableBikes.length;i++){
+        isSwap = false;
+        for (var j = 0; j< availableBikes.length - 1 - i;j++){
+            if(availableBikes[j]<availableBikes[j+1]){
+                isSwap = true;
+                temp1 = availableBikes[j+1];
+                availableBikes[j+1] = availableBikes[j];
+                availableBikes[j] = temp1;
+                temp2 = labels[j+1];
+                labels[j+1] = labels[j];
+                labels[j] = temp2;
+            }
+        }
+        
+    }
+        
+    var NewBikes = new Array(10);
+    var NewLabels = new Array(10);
+    for (var k = 0; k<10;k++){
+        NewBikes[k] = availableBikes[k];
+        NewLabels[k] = labels[k];
+    }
+     document.getElementById("test1").innerHTML = NewBikes;
+ 
+    var data = {
+      labels: NewLabels,
+      datasets: [
+      {
+        label: "available bikes stands",
+        fillColor: "rgba(10,87,105,0.5)",
+        strokeColor: "rgba(151,187,205,0.8)",
+        highlightFill: "rgba(151,187,205,0.75)",
+        highlightStroke: "rgba(151,187,205,1)",
+        data: NewBikes
+      }
+      ]
+    };
+    var options = {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Find the best 10 stations to return bikes '
+        }
+    };
+    var ctx2 = document.getElementById("myChart2").getContext("2d");
+    ctx2.canvas.width = 1400;
+    ctx2.canvas.height = 300;
+
+    var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});
+  });    
+      </script>
+      
   </body>
 </html>

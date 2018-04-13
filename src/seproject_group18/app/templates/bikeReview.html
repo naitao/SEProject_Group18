@@ -29,64 +29,21 @@
   <body>
     <div id="map"></div>
     <div>
-	<form id="temp_form" name="form1" action="#">
-		<label for="temp">Temp</label>
-    	<select id="temp" name="temp" style="font-family : monospace; font-size : 10pt">
-      	<option value="1">-5~0℃</option>
-	  	<option value="2">1~10℃</option>
-	  	<option value="3">11~20℃</option>
-	  	<option value="4">20~30℃</option>
-	  	<option value="5">30~40℃</option>		
-		</select>
-	</form>
-	<form id="humidity_form" name="form2" action="#">
-		<label for="humidity">humidity</label>
-    	<select id="humidity" name="humidity" style="font-family : monospace; font-size : 10pt">
-      	<option value="1">30~60</option>
-	  	<option value="2">61~70</option>
-	  	<option value="3">71~80</option>
-	  	<option value="4">81~90</option>
-	  	<option value="5">91~100</option>		
-	  	<option value="6">101~120</option>		
-		</select>
-	</form>
-	<form id="weather" name="form3" action="#">
-		<label for="weather">weather</label>
-    	<select id="weather" name="weather" style="font-family : monospace; font-size : 10pt">
-      	<option value="1">Rain</option>
-	  	<option value="2">Snow</option>
-	  	<option value="3">Cloud</option>
-	  	<option value="4">Sunny</option>
-		</select>
-	</form>
-	<form id="rainValue" name="form4" action="#">
-		<label for="rainValue">Rain 3H</label>
-    	<select id="rainValue" name="rainValue" style="font-family : monospace; font-size : 10pt">
-      	<option value="1">0-50</option>
-	  	<option value="2">51-100</option>
-	  	<option value="3">101-150</option>
-	  	<option value="4">150-200</option>
-	  	<option value="4">201-300</option>
-	  	<option value="4">Over 300</option>
-		</select>
-	</form>
-	<form id="wind" name="form5" action="#">
-		<label for="wind">wind speed</label>
-    	<select id="wind" name="wind" style="font-family : monospace; font-size : 10pt">
-      	<option value="1">0-5</option>
-	  	<option value="2">6-10</option>
-	  	<option value="3">11-15</option>
-	  	<option value="4">16-20</option>
-	  	<option value="4">Over 20</option>
-		</select>
-	</form>
-	<button id="mybutton" type="button"> Submit </button>		
-    
-	<form action="#" id='switch'>
-		<input type="checkbox" name="subscribe" onclick="addMoreInfo()">
-    	<label>Subscribe additional weather informations</label>
-	</form>
-	<button id="page02" style="position:relative; left:5px; top: 10px; display: none" onclick="recallRequired()">Go back to Weather Summary </button>
+	<form action="www.google.com">
+        Temperature:(from -10 to 30)
+        <input type="text" name="Temp" value=""><br>
+        Humidity:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 70 to 100)
+        <input type="text" name="Humi" value=""><br>
+        Weather:&nbsp;&nbsp;(Rain,Clouds,Clear)
+        <input type="text" name="Weat" value=""><br>
+        Rain 3H:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to )
+        <input type="text" name="Rain" value=""><br>
+        Wind Speed:&nbsp;&nbsp;&nbsp;(from 0 to 20 )
+        <input type="text" name="Wind" value="">
+        
+        <br>
+        <input type="submit" value="Submit">
+</form>
     </div>
 
     <script>
