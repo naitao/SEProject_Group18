@@ -7,45 +7,49 @@
       google.charts.setOnLoadCallback(drawVisualization);
 
       function drawVisualization() {
-        // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable([
-         ['Station',     'Availability'],
-              ['1', 24], 
-              ['2', 30], 
-              ['3', 31],
-              ['4', 25],
-              ['5', 27],
-              ['6', 30], 
-              ['7', 31],
-              ['8', 30], 
-              ['9', 25],
-              ['10', 28],
-              ['11', 30],
-              ['12', 24],
-              ['13', 34],
-              ['14', 25], 
-              ['15', 27],
-              ['16', 29],
-              ['17', 30],
-              ['18', 15],
-              ['19', 24],
-              ['20', 33],
-              ['21', 27],
-              ['22', 38],
-              ['23', 25],
-              ['24', 32]
-      ]);
 
-    var options = {
-      title : 'Bike availability per station',
-      vAxis: {title: 'Bike availability'},
-      hAxis: {title: 'Stations'},
-      seriesType: 'bars',
-   //   series: {1: {type: 'line'}}
-    };
+      var xmlhttp = new XMLHttpRequest();
+      var url = "Dublin_Chart_7.json";
 
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
+      xmlhttp.onreadystatechange = function() 
+      {
+         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) 
+         {
+            //Parse the JSON data to a JavaScript variable. 
+            window.parsedObj = JSON.parse(xmlhttp.responseText); 
+            
+            // read bikes availability data from JSON
+            var bikesDat = [['Station', 'Availability']];
+            var objData = parsedObj[0]; // the object seems to be an array
+             
+            for (var n =0; n < 25; n++)
+            {
+                bikesDat.push ( [String(n), objData[n]]);
+            }
+
+            var data = new google.visualization.arrayToDataTable(bikesDat);
+
+            var options = 
+            {
+                title : 'Bike availability per station',
+                vAxis: {title: 'Bike availability'},
+                hAxis: {title: 'Stations'},
+                seriesType: 'bars',
+            //   series: {1: {type: 'line'}}
+            };
+
+            var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+         }
+        };
+          
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();      
+          
+          
+          
+          
+        
   }
     </script>
 
@@ -111,7 +115,7 @@
         var url = "Dublin_weather_updated.json";
 
          xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
             //Parse the JSON data to a JavaScript variable. 
             window.parsedObj = JSON.parse(xmlhttp.responseText); 
@@ -119,8 +123,8 @@
             // This function is defined below and deals with the JSON data parsed from the file. 
             //   NOTE: for test "coord":{"lat":53.3551,"lon":-6.2493},
             displayWeather(parsedObj, dispInt, currDate, 53.3551, -6.2493); 
-        }
-    };
+            }
+        };
 
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
