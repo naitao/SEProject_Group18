@@ -34,7 +34,7 @@
 
 
             var xmlhttp = new XMLHttpRequest();
-            var url = "Dublin_bike_updated.json";
+            var url = "/bike5json/";
             xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
@@ -120,22 +120,39 @@ xmlhttp.send();
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
     </script>
-      <div id="test">111</div>
 
-      <div style="width: 100%; height: 100%;">
-    <canvas id="myChart1" width="740" height="200"></canvas>
+      <div style="width: 100%; height: 40%;">
+    <h1> Chart 1 </h1>
+    <canvas id="myChart1"></canvas>
       </div>
-      <div id="test1">121</div>
-      <div style="width: 100%; height: 100%;">
-    <canvas id="myChart2" width="740" height="200"></canvas>
+    <h1> Chart 2</h1>
+      <div style="width: 100%; height: 40%;">
+    <canvas id="myChart2"></canvas>
       </div>
-    <script src="Chart.js"></script>
+    <h3> Dublin Bike Station usage rate on Rain and Non-Rain days (RedColor: Rain, GreyColor: Non-Rain)</h3>
+      <div style="width: 100%; height: 40%;">
+    <canvas id="myChart"></canvas>
+      </div>
+
+    <div class="w3-container w3-teal">
+        <h1>This is the forecast for Dublin Bike Stations</h1>
+    </div>
+    <p id="selection">This part of code will display 24hrs weather forecast. It takes data from JSON file and
+      triggers using OnClick method</p>
+    <form>
+      </br>
+        <button type ="button" onclick="changeSelection()" id="submitBtn">Click here to see weather</button>
+      </br>
+    </form>
+    <div id="weatherId">   </div>   
+
+    	<script src="/charts.js/"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
     <script>
-        // chart1
-    $.getJSON("Dublin_bike_updated.json", function (json) {
+    // chart1
+    $.getJSON("/bike5json/", function (json) {
     var labels = json.map(function(item) {
       return item.name;
     });
@@ -169,7 +186,6 @@ xmlhttp.send();
         NewBikes[k] = availableBikes[k];
         NewLabels[k] = labels[k];
     }
-    document.getElementById("test").innerHTML = NewLabels.length;
  
     var data = {
       labels: NewLabels,
@@ -195,13 +211,13 @@ xmlhttp.send();
     ctx.canvas.width = 1400;
     ctx.canvas.height = 300;
 
-    var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});
+    var myChart1 = new Chart(ctx).Bar(data, {barShowStroke: true});
   });
     </script>
       
     <script>
       //chart2
-    $.getJSON("Dublin_bike_updated.json", function (json) {
+    $.getJSON("/bike5json/", function (json) {
     var labels = json.map(function(item) {
       return item.name;
     });
@@ -235,7 +251,6 @@ xmlhttp.send();
         NewBikes[k] = availableBikes[k];
         NewLabels[k] = labels[k];
     }
-     document.getElementById("test1").innerHTML = NewBikes;
  
     var data = {
       labels: NewLabels,
@@ -264,6 +279,186 @@ xmlhttp.send();
     var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});
   });    
       </script>
+      <script>
+  $.getJSON("/station_chart6/", function (json) {
+  // will generate array with ['Monday', 'Tuesday', 'Wednesday']
+  var labels = json.map(function(item) {
+    return item.clock;
+  });
+  var Rate = json.map(function(item){
+    return item.rate;
+  });
+  var RainRate = new Array(24);
+  var nonRainRate = new Array(24);
+  for (var i=0; i<Rate.length; i++){
+      	RainRate[i] = Rate[i].Rain;
+      	nonRainRate[i] = Rate[i].NonRain;
+  }
+  //document.write(RainRate[1], RainRate[2], RainRate[13], 000, Rate.length);
+  //document.write(labels[0]);
+  var data = {
+    labels: labels,
+    datasets: [
+    {
+      label: "Rain",
+      //fillColor: "rgba(220,220,220,0.5)",
+      fillColor: "rgba(255, 0, 0, 1)",
+      strokeColor: "rgba(220,220,220,0.8)",
+      highlightFill: "rgba(220,220,220,0.75)",
+      highlightStroke: "rgba(220,220,220,1)",
+      data: RainRate
+    },
+    {
+      label: "NonRain",
+      fillColor: "rgba(10,87,105,0.5)",
+      highlightFill: "rgba(151,187,205,0.8)",
+      highlightFill: "rgba(151,187,205,0.75)",
+      highlightStroke: "rgba(151,187,205,1)",
+      data: nonRainRate
+    }
+    ]
+  };
+  var options = {
+      legend: { display: false },
+      title: {
+          display: true,
+          text: 'One week bike usage calculations'
+      }
+  }
+  var ctx = document.getElementById("myChart").getContext("2d");
+  ctx.canvas.width = 1400;
+  ctx.canvas.height = 300;
+
+  var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});
+});
+  </script>
+  <script>   
+    // Anna code
+    // Global variables here
+    //
+    var weatherInfo  = "</br><table border = 1 >"; // global variable which correspond to main weather info 
+    
+    // Global variable which sets current date/time for filter.
+    var currDate     = new Date("2018-03-12 05:00:00");  // new Date();
+    var dispInt      = 8; // means 24hrs display interval. can be up to 40.
+    
+    //
+    //  Function that loads JSON fie with main weather info
+    //
+    function loadJSON()
+    {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "/weatherjson/";
+
+         xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            //Parse the JSON data to a JavaScript variable. 
+            window.parsedObj = JSON.parse(xmlhttp.responseText); 
+            
+            // This function is defined below and deals with the JSON data parsed from the file. 
+            //   NOTE: for test "coord":{"lat":53.3551,"lon":-6.2493},
+            displayWeather(parsedObj, dispInt, currDate, 53.3551, -6.2493); 
+        }
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+    }
+        
+        
+    // 
+    // Here we display main weather info:
+    //  obj - loaded JSON object
+    //  displayInterval  (=8 by default for 24hrs) - how many weather records we want to display
+    //  currDateTime      - curent date/time for weather filter
+    //  currLat, currLon  - lattitude/longitude - for location filter
+    //
+    function displayWeather(obj, displayInterval, currDateTime, currLat, currLong) 
+    { 
+        var daysArray    = obj.list;
+        var quotes       = "\"";
+        var NumberOfDays = Math.min(displayInterval, daysArray.length);
+        var currDateTimeUTC = Math.floor(currDateTime.getTime() / 1000) 
+        var startOffset = 0;
+        
+        //console.log("number of days :", NumberOfDays);
+        //console.log("date/UTC timestamp  :", currDateTime, currDateTimeUTC);
+             
+        for (var i=0; i< daysArray.length; i++) {
+          if (daysArray[i].dt >= currDateTimeUTC) {
+              break; }
+            startOffset++;
+        }
+            
+        // new data, something to display
+        if (startOffset < daysArray.length)
+        {
+            if ( obj.city.coord.lat == currLat &&
+                  obj.city.coord.lon == currLong )
+            {
+
+                // Main weather info - table header
+                weatherInfo += "<tr>";    
+                for (var i=0; i < NumberOfDays; i++) {  
+                   weatherInfo += "<td>" + daysArray[i+startOffset].dt_txt + "</td>";
+
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++) {
+                  weatherInfo += "<td><img src=/../" + daysArray[i+startOffset].weather[0].icon + ".png width=64 height=64></img></td>"; 
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++)  {
+                   weatherInfo += "<td>" + daysArray[i+startOffset].weather[0].description + "</td>";
+                }
+
+                weatherInfo +="</tr><tr>";
+                for (var i=0; i < NumberOfDays; i++) {   
+                     weatherInfo += "<td>"+daysArray[i+startOffset].main.temp + "°C</td>";
+                }
+
+                weatherInfo +="</tr><tr>";
+
+                for (var i=0; i < NumberOfDays; i++) {
+                    weatherInfo += "<td>" + daysArray[i+startOffset].main.humidity + "%</td>";
+                }
+                weatherInfo +="</tr><tr>";
+
+                for (var i=0; i < NumberOfDays; i++) {
+                    weatherInfo +="<td>" + daysArray[i+startOffset].wind.speed + "km/h</td>"
+                }
+                weatherInfo +="</tr>";
+            }
+            else
+            {
+                weatherInfo +="<b>Undefined location lat:"+currLat+", lon:"+currLong+".</b>";    
+            }
+        }
+        else // no new weather data..
+        {
+            weatherInfo +="<b>No current weather update</b>";
+        }
+        
+        // Close the table element.
+        weatherInfo += "</table>"; 
+      
+        // Finally, we constructed string. Lets assign it to actual HTML property
+        document.getElementById("weatherId").innerHTML = weatherInfo;
+    }
+    </script>
+ <script>
+     //
+     // This function triggers when user clicks submit button.
+     //
+    function changeSelection()
+     {
+        loadJSON();
+        weatherInfo  = "</br><table border = 0 >";
+    }        
+</script>
       
   </body>
 </html>

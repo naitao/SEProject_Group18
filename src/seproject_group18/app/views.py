@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, url_for
+from flask import Flask, redirect, render_template, session, url_for, request
 from flaskext.mysql import MySQL
 app = Flask(__name__, static_url_path = "")
 from seproject_group18.script import dataAnalytic
@@ -50,6 +50,9 @@ def bike5():
 @app.route('/bike5json/')
 def bike5json():
         return app.send_static_file("Dublin_bike_updated.json")
+@app.route('/chart6.js/')
+def chart5():
+        return app.send_static_file("chart6.js")
 @app.route('/charts.js/')
 def chartsjs():
         return app.send_static_file("Chart.js")
@@ -70,3 +73,27 @@ def chart6():
 @app.route('/station_chart7/')
 def chart7():
         return app.send_static_file("Dublin_Chart_7.json")
+
+
+@app.route('/test/')
+def test():
+    return render_template('test.html')
+
+@app.route('/analyze', methods=['GET', 'POST'])
+def server():
+    if request.method == 'POST':
+        returnDict = {} 
+        # Then get the data from the form
+        returnDict['temp'] = request.form['Temp']
+        returnDict['humidity'] = request.form['Humi']
+        returnDict['weather'] = request.form['Weat']
+        returnDict['rain3h'] = request.form['Rain']
+        returnDict['windspeed'] = request.form['Wind']
+
+        # Generate just a boring response
+        #return 'The credentials for %s are %s and %s' % (temp, humidity, weather) 
+        return render_template('bikeReview.html', **returnDict)
+
+    # Otherwise this was a normal GET request
+    else:   
+        return render_template('index.html')

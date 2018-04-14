@@ -249,7 +249,53 @@ class dataAnalytic:
                      'Clock':1}
         return weather_dict, bike_dict
   
+    def insertClockToMysql(self):
+        '''temperary method'''
+        # timestamp
+        now = int(time.time())
+        # 1 month ago
+        monthago = now - 2592000
+        # 1 week ago
+        weekago = now - 604800
+        try:
+            mydb = MySQLdb.connect(host= self.__mysql_host,
+                                   user = self.__mysql_user,
+                                   passwd = self.__mysql_password,
+                                   db = self.__bike_db)
+            cursor = mydb.cursor()
+        except Exception as e:
+            print(str(e))
 
+        intervalRate = []
+        intervalRecord = {}
+        cursor.execute('select * from BikeStationHistory order by Last_update desc')
+        row = cursor.fetchone()
+        count = 0
+        timeDict = {}
+        while row is not None:
+            timestamp = int(row[11].strip("'"))
+            #print(timestamp, weekago*1000)
+            if timestamp < weekago*1000:
+                row = cursor.fetchone()
+                continue
+            else:
+                clock = int(timestamp/1000 % (3600*24) / 3600)
+                timeDict[row[11]] = clock
+                #print(count, row[11], clock, weekago*1000)
+            #if count >= 10:
+            #    break;
+            #count = count + 1
+            row = cursor.fetchone()
+        print(len(timeDict.keys()))
+        count = 0
+        for key, value in timeDict.items():
+            count = count + 1
+            #print("key=", key, ",value=", value)
+            cursor.execute('UPDATE BikeStationHistory SET Clock = %s WHERE Last_update = %s', (value, key))
+            if count % 200 == 0:
+                print("Counting: ", count, key)
+        mydb.commit()
+        cursor.close()
 
 
 def main():
@@ -263,8 +309,10 @@ def main():
 #dict = myAnalytic.getOneDayPerWeekBikeData()
 #print(dict)
     #myAnalytic.writeToJson()
-    weather_dict, bike_dict = myAnalytic.createInputData()
-    myAnalytic.getOneMonthData(weather_dict, bike_dict)
+
+    #weather_dict, bike_dict = myAnalytic.createInputData()
+    #myAnalytic.getOneMonthData(weather_dict, bike_dict)
+    myAnalytic.insertClockToMysql()
 
 
 if __name__ == '__main__': 
