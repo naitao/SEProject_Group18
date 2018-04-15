@@ -360,7 +360,7 @@ def main():
     #weather_dict, bike_dict = myAnalytic.createInputData()
     #myAnalytic.getOneMonthData(weather_dict, bike_dict)
     #myAnalytic.insertClockToMysql()
-    for number in range(30,106):
+    for number in range(30,32):
         prediction, bikeStands = myAnalytic.getPredictionOnStation(temp=15,humidity=75,weather='Rain',\
                                                    windSpeed=5,rain3h=50,stationNumber=number)
         print("Bike Station {} will be used {}/{} bikes at that time".format(number, prediction, bikeStands))
