@@ -1,4 +1,4 @@
-#import MySQLdb, json
+import MySQLdb, json
 import time, os, shutil, datetime, sys
 import pandas as pd
 import numpy as np
@@ -15,6 +15,10 @@ class dataAnalytic:
         self.__weather_db = 'weather'
         self.__bike_db = 'bike'
         self.__current_path = os.path.dirname(os.path.abspath(__file__))
+        self.__bikeStation = self.__getStations()
+
+    def getBikeStations(self):
+        return self.__bikeStation
 
     def __getTrainingDataFrame(self, stationNumber):
         bikeStationFile = self.__current_path + "/../../../data/bikeStation.csv"
@@ -61,7 +65,7 @@ class dataAnalytic:
             prediction = 0
         elif prediction >= bikeStands:
             prediction = bikeStands
-        return round(prediction, 2), bikeStands
+        return int(round(prediction)), bikeStands
 
 
     def __createInterval(self):
@@ -92,6 +96,26 @@ class dataAnalytic:
 
     def __isInInterval(self, duration, mytime):
         return int(duration[0]) <= mytime/1000 <= int(duration[1])
+
+    def __getStations(self):
+        try:
+            mydb = MySQLdb.connect(host= self.__mysql_host,
+                                   user = self.__mysql_user,
+                                   passwd = self.__mysql_password,
+                                   db = self.__bike_db)
+            cursor = mydb.cursor()
+        except Exception as e:
+            print(str(e))
+        bikeStationDict = {}
+        cursor.execute('SELECT distinct Number, Name FROM BikeStationHistory')
+        row = cursor.fetchone()
+        while row is not None:
+            bikeStationDict[row[0]]=row[1] 
+            row = cursor.fetchone()
+        mydb.commit()
+        cursor.close()
+
+        return bikeStationDict
 
     def getOneDayPerWeekBikeData(self):
         t, oneWeekWeather = self.__getWeatherData()
@@ -349,6 +373,7 @@ class dataAnalytic:
 
 def main():
     myAnalytic = dataAnalytic()
+    print(myAnalytic.getBikeStations()[3])
     #print(oneWeekWeather)
     #w_analytics = analyzingOnWeather(oneWeekWeather)
     #print(w_analytics)
@@ -361,11 +386,13 @@ def main():
     #weather_dict, bike_dict = myAnalytic.createInputData()
     #myAnalytic.getOneMonthData(weather_dict, bike_dict)
     #myAnalytic.insertClockToMysql()
-    for number in range(1,12):
+    '''
+    for number in range(22,25):
         prediction, bikeStands = myAnalytic.getPredictionOnStation(temp=15,humidity=75,weather='Rain',\
                                                    windSpeed=5,stationNumber=number)
         print("Bike Station {} will be used {}/{} bikes at that time".format(number, prediction, bikeStands))
-
+        time.sleep(1)
+    '''
 if __name__ == '__main__': 
     main()
 

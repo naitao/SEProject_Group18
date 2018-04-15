@@ -1,7 +1,19 @@
 <!DOCTYPE html >
 <html>
+<head>
+	<meta charset="UTF-8">
+	<title> Prediction Web Page </title>
+</head>
   <head>
     <style type="text/css">
+    footer {
+        background-color:black;
+        color:white;
+        clear:both;
+        text-align:center;
+        padding:5px;
+        }
+
     form {
         display: inline-block; //Or display: inline; 
     }
@@ -14,12 +26,12 @@
        * element that contains the map. */
       #map {
          width: 100%;
-             height: 400px;
+             height: 600px;
              background-color: grey;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
-        height: 100%;
+        height: 80%;
         margin: 0;
         padding: 0;
       }
@@ -28,14 +40,14 @@
 
   <body>
     <div id="map"></div>
+    <div id="prediction" align="center">
+    </div>
     <div>
 	<form align="right" action="/analyze" method="POST" id="analyzing">
         Temperature&nbsp;:(from -10 to 30)
         <input type="text" name="Temp" value=""><br>
         Humidity:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 70 to 100)
         <input type="text" name="Humi" value=""><br>
-        Rain3H:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to 50)
-        <input type="text" name="Rain" value=""><br>
         WindSpeed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to 20)
         <input type="text" name="Wind" value=""><br>
         Bike Station:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1-104)
@@ -51,17 +63,12 @@
 	</form>
         <link rel="next" href="test.html">
     </div>
-
     <script>
-        var myValue = ['{{ temp }}', '{{humidity}}', '{{weather}}', '{{rain3h}}', '{{windspeed}}'];
-
-        if (myValue[0].length > 0) {
-            alert("I am an alert box!" + myValue[0] + ',' + myValue[1] + ', ' + myValue[2]);
-        }
+        //var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
         function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(53.3551, -6.2493),
-          zoom: 12
+          center: new google.maps.LatLng(53.3481, -6.2593),
+          zoom: 14
         });
    
             
@@ -139,17 +146,21 @@
           }
         }
         
+        var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
+        var out = '<table border="10" width="700"><tr><th rowspan="4"<h1> Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' Bikes in that day';
+        document.getElementById("prediction").style.display = "none";
+        if (myValue[0].length > 0) {
+            document.getElementById("prediction").style.display = "block";
+            document.getElementById("prediction").innerHTML = out;
+        }
          
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
     </script>
-<div style="width: 100%; height: 100%;">
-    <canvas id="myChart" style="width: 100%; height: auto;"></canvas>
-</div>
-<div id="js-legend" class="chart-legend"></div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+    <div style="width: 100%; height: 5%;"></div>
+<footer>
+		Copyright © uceconnect.ie
+</footer>
   </body>
 </html>

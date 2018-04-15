@@ -98,17 +98,23 @@ def test():
 def server():
     if request.method == 'POST':
         returnDict = {} 
+        #'{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}
         # Then get the data from the form
-        returnDict['temp'] = request.form['Temp']
-        returnDict['humidity'] = request.form['Humi']
-        returnDict['weather'] = request.form['Weat']
-        returnDict['rain3h'] = request.form['Rain']
-        returnDict['windspeed'] = request.form['Wind']
+        number = int(request.form['Number'])
+        temp = float(request.form['Temp'])
+        humidity = int(request.form['Humi'])
+        weather = request.form['Weat']
+        windspeed = float(request.form['Wind'])
+
+        myAnalytic = dataAnalytic.dataAnalytic()
+        returnDict['location'] = myAnalytic.getBikeStations()[int(number)]
+        returnDict['number'] = number
+        returnDict['usedBikes'], returnDict['bikeStands'] = myAnalytic.getPredictionOnStation(temp=temp,humidity=humidity,weather=weather,\
+                                                   windSpeed=windspeed,stationNumber=number)
 
         # Generate just a boring response
-        #return 'The credentials for %s are %s and %s' % (temp, humidity, weather) 
         return render_template('bikeReview.html', **returnDict)
 
     # Otherwise this was a normal GET request
     else:   
-        return render_template('index.html')
+        return render_template('bike5.html')

@@ -30,7 +30,7 @@ class makeCSV:
         intervalRate = []
         intervalRecord = {}
         cursor.execute('select * from BikeStationHistory order \
-                           by Last_update desc')
+                           by Last_update desc LIMIT 2000')
         row = cursor.fetchone()
         d = { 'Number':[],
               'Available_bike_stands':[],
