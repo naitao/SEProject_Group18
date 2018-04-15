@@ -37,7 +37,7 @@ def bike():
         returnDict['rate'], returnDict['bikeStands'] = "A", "B"
         return render_template("bike.html", **returnDict)
 @app.route('/bikeReview/') 
-def bikeAnalytics(): 
+def bikeReview(): 
         return render_template("bikeReview.html")
 
 @app.route('/weather/icons/<name>') 
@@ -50,12 +50,29 @@ def bike5():
 @app.route('/bike5json/')
 def bike5json():
         return app.send_static_file("Dublin_bike_updated.json")
-@app.route('/chart6.js/')
-def chart5():
-        return app.send_static_file("chart6.js")
+
+@app.route('/markers.js/')
+def markers():
+        return app.send_static_file("markers.js")
 @app.route('/charts.js/')
 def chartsjs():
         return app.send_static_file("Chart.js")
+@app.route('/chart1.js/')
+def chart1():
+        return app.send_static_file("chart1.js")
+@app.route('/chart2.js/')
+def chart2():
+        return app.send_static_file("chart2.js")
+@app.route('/chart6.js/')
+def chart6():
+        return app.send_static_file("chart6.js")
+@app.route('/weather.js/')
+def wheather():
+        return app.send_static_file("weather.js")
+@app.route('/bikeCss.css/')
+def bikeCss():
+        return app.send_static_file("bikeCss.css")
+
 @app.route('/charts.min.js/')
 def chartsminjs():
         return app.send_static_file("Chart.min.js")
@@ -66,14 +83,12 @@ def chartsbundlejs():
 def chartsbundleminjs():
         return app.send_static_file("Chart.bundle.min.js")
 
-
 @app.route('/station_chart6/')
-def chart6():
+def stationChart6():
         return app.send_static_file("Dublin_Chart_6.json")
 @app.route('/station_chart7/')
 def chart7():
         return app.send_static_file("Dublin_Chart_7.json")
-
 
 @app.route('/test/')
 def test():

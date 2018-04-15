@@ -2,11 +2,8 @@
 import time, os, shutil, datetime, sys
 import pandas as pd
 import numpy as np
-<<<<<<< HEAD
 
-=======
 import statsmodels.formula.api as sm
->>>>>>> 446b41f2cab754c3dbbef4c81cff1f031d029c8e
 
 
 class dataAnalytic:
