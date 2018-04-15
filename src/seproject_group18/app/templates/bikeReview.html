@@ -29,23 +29,35 @@
   <body>
     <div id="map"></div>
     <div>
-	<form align="right" action="www.google.com">
+	<form align="right" action="/analyze" method="POST" id="analyzing">
         Temperature&nbsp;:(from -10 to 30)
         <input type="text" name="Temp" value=""><br>
         Humidity:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 70 to 100)
         <input type="text" name="Humi" value=""><br>
-        Weather:&nbsp;&nbsp;(Rain,Clouds,Clear)
-        <input type="text" name="Weat" value=""><br>
         Rain3H:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to 50)
         <input type="text" name="Rain" value=""><br>
         WindSpeed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to 20)
         <input type="text" name="Wind" value=""><br>
+        Bike Station:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1-104)
+        <input type="text" name="Number" value=""><br>
+        <select name='Weat' form="analyzing">
+          <option value=" " selected> SELECT A WEATHER </option>
+          <option value="Rain">Rain</option>
+          <option value="Clouds">Clouds</option>
+          <option value="Clear">Clear</option>
+        </select>
+         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
         <input type="submit" value="Submit">
 	</form>
+        <link rel="next" href="test.html">
     </div>
 
     <script>
+        var myValue = ['{{ temp }}', '{{humidity}}', '{{weather}}', '{{rain3h}}', '{{windspeed}}'];
 
+        if (myValue[0].length > 0) {
+            alert("I am an alert box!" + myValue[0] + ',' + myValue[1] + ', ' + myValue[2]);
+        }
         function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: new google.maps.LatLng(53.3551, -6.2493),

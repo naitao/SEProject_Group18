@@ -21,3 +21,6 @@ sudo apt-get install python3-mysqldb
 sudo apt-get install npm
 #sudo npm install -g http-server
 sudo npm install chart.js --save
+
+6. install linear regression training module
+sudo pip install statsmodels
