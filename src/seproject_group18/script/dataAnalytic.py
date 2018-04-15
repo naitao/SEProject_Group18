@@ -18,7 +18,7 @@ class dataAnalytic:
 
     def __getTrainingDataFrame(self, stationNumber):
         bikeStationFile = self.__current_path + "/../../../data/bikeStation.csv"
-        weatherDetailsFile = self.__current_path + "/../../../data/weatherDetails.csv"
+        weatherDetailsFile = self.__current_path + "/../../../data/newWeatherDetails.csv"
         dfBike = pd.read_csv(bikeStationFile)
         dfWeather = pd.read_csv(weatherDetailsFile)
         station_df = dfBike[(dfBike['Number']==stationNumber)]
@@ -29,18 +29,19 @@ class dataAnalytic:
                                humidity=0,
                                weather=None,
                                windSpeed=0,
-                               rain3h=0,
                                stationNumber=1):
         station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
         if len(station_df) == 0:
-            return -1
+            return 0,0
         for i in station_df.index:
             bikeStands = station_df.loc[i, 'Bike_stands']
             s_timeStamp=int(station_df.loc[i, 'TimeStamp'])
             for j in dfWeather.index:
                 w_timeStamp=int(dfWeather.loc[j, 'Dt'])
                 time_diff = s_timeStamp - w_timeStamp
-                if time_diff >= 0 and time_diff < 10800:
+                # We assume that the weather conditions within 1 hour
+                # after weatherDetails are in same weather status
+                if time_diff >= 0 and time_diff < 3600:
                     # print(s_timeStamp)
                     station_df.loc[i, 'Temp'] = dfWeather.loc[j, 'Temp']
                     station_df.loc[i, 'Humidity'] = dfWeather.loc[j, 'Humidity']
@@ -48,19 +49,19 @@ class dataAnalytic:
                     station_df.loc[i, 'WindSpeed'] = dfWeather.loc[j, 'WindSpeed']
                     station_df.loc[i, 'Rain3H'] = dfWeather.loc[j, 'Rain3H']
 
-        lm_categ = sm.ols(formula="Available_bike_stands ~ Temp +  Humidity + WindSpeed + C(WeatherMain) \
-                              + Rain3H", data=station_df).fit()
+        lm_categ = sm.ols(formula="Available_bike_stands ~ Temp + \
+                              Humidity + WindSpeed + C(WeatherMain) \
+                                  ", data=station_df).fit()
         x_new = pd.DataFrame({'Temp':[temp],
                               'Humidity':[humidity],
                               'WeatherMain':[weather],
-                              'WindSpeed':[windSpeed],
-                              'Rain3H': [rain3h]})
+                              'WindSpeed':[windSpeed]})
         prediction = lm_categ.predict(x_new).loc[0]
         if prediction <= 0:
             prediction = 0
         elif prediction >= bikeStands:
             prediction = bikeStands
-        return prediction, bikeStands
+        return round(prediction, 2), bikeStands
 
 
     def __createInterval(self):
@@ -292,8 +293,7 @@ class dataAnalytic:
         weather_dict = {'Temp': 10,
                         'Humidity': 80,
                         'Weather_Main': 'Rain',
-                        'Wind_speed': 20,
-                        'Rain3H': 250}
+                        'Wind_speed': 20}
         bike_dict = {'Number':1,
                      'Clock':1}
         return weather_dict, bike_dict
@@ -361,12 +361,10 @@ def main():
     #weather_dict, bike_dict = myAnalytic.createInputData()
     #myAnalytic.getOneMonthData(weather_dict, bike_dict)
     #myAnalytic.insertClockToMysql()
-    for number in range(30,32):
+    for number in range(1,12):
         prediction, bikeStands = myAnalytic.getPredictionOnStation(temp=15,humidity=75,weather='Rain',\
-                                                   windSpeed=5,rain3h=50,stationNumber=number)
+                                                   windSpeed=5,stationNumber=number)
         print("Bike Station {} will be used {}/{} bikes at that time".format(number, prediction, bikeStands))
-        time.sleep(5)
-
 
 if __name__ == '__main__': 
     main()
