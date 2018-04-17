@@ -21,7 +21,7 @@ $.getJSON("Dublin_Chart_6.json", function (json) {
     {
       label: "Rain",
       //fillColor: "rgba(220,220,220,0.5)",
-      fillColor: "rgb(87, 160, 255)",
+      fillColor: "rgba(255, 0, 0, 1)",
       strokeColor: "rgba(220,220,220,0.8)",
       highlightFill: "rgba(220,220,220,0.75)",
       highlightStroke: "rgba(220,220,220,1)",
@@ -29,7 +29,7 @@ $.getJSON("Dublin_Chart_6.json", function (json) {
     },
     {
       label: "NonRain",
-      fillColor: "rgb(133, 140, 140)",
+      fillColor: "rgba(10,87,105,0.5)",
       highlightFill: "rgba(151,187,205,0.8)",
       highlightFill: "rgba(151,187,205,0.75)",
       highlightStroke: "rgba(151,187,205,1)",
@@ -45,7 +45,7 @@ $.getJSON("Dublin_Chart_6.json", function (json) {
       }
   }
   var ctx = document.getElementById("myChart").getContext("2d");
-  ctx.canvas.width = 950;
+  ctx.canvas.width = 1400;
   ctx.canvas.height = 300;
 
   var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});

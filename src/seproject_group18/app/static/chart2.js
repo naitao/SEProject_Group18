@@ -1,4 +1,4 @@
-$.getJSON("/bike5json/", function (json) {
+$.getJSON("Dublin_bike_updated.json", function (json) {
     var labels = json.map(function(item) {
       return item.name;
     });
@@ -23,22 +23,22 @@ $.getJSON("/bike5json/", function (json) {
                 labels[j] = temp2;
             }
         }
-
+        
     }
-
+        
     var NewBikes = new Array(10);
     var NewLabels = new Array(10);
     for (var k = 0; k<10;k++){
         NewBikes[k] = availableBikes[k];
         NewLabels[k] = labels[k];
     }
-
+ 
     var data = {
       labels: NewLabels,
       datasets: [
       {
         label: "available bikes stands",
-        fillColor: "rgba(10,87,105,0.5)",
+        fillColor: "rgb(87, 160, 255)",
         strokeColor: "rgba(151,187,205,0.8)",
         highlightFill: "rgba(151,187,205,0.75)",
         highlightStroke: "rgba(151,187,205,1)",
@@ -54,8 +54,8 @@ $.getJSON("/bike5json/", function (json) {
         }
     };
     var ctx2 = document.getElementById("myChart2").getContext("2d");
-    ctx2.canvas.width = 1400;
+    ctx2.canvas.width = 950;
     ctx2.canvas.height = 300;
 
     var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});
-  });
+  });    

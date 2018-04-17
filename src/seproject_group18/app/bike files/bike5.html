@@ -4,266 +4,50 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Information of Bike Station</title>
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-         width: 100%;
-             height: 400px;
-             background-color: grey;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
+    <link rel="stylesheet" href="css/bikeCss.css">
   </head>
 
   <body>
     <div id="map"></div>
 
-    <script>
-
-        function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(53.3551, -6.2493),
-          zoom: 13
-        });
-
-
-            var xmlhttp = new XMLHttpRequest();
-            var url = "Dublin_bike_updated.json";
-            xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-        //Parse the JSON data to a JavaScript variable.
-                    var parsedObj = JSON.parse(xmlhttp.responseText);
-        // This function is defined below and deals with the JSON data parsed from the file.
-                displayInfo(parsedObj);
-    }
-};
-xmlhttp.open("GET", url, true);
-xmlhttp.send();
-        function displayInfo(obj){
-            for(var i=0;i<obj.length;i++){
-                var infoWindow = new google.maps.InfoWindow;
-                var number = obj[i].number;
-                var name = obj[i].name;
-                var address = obj[i].address;
-                var available_bikes = obj[i].available_bikes;
-                var available_bike_stands = obj[i].available_bike_stands;
-                var bike_stands = obj[i].bike_stands;
-                var banking = obj[i].banking;
-                var bonus = obj[i].bonus;
-                var status = obj[i].status;
-                var lat = obj[i].position.lat;
-                var lng = obj[i].position.lng;
-                var position = new google.maps.LatLng(parseFloat(lat),parseFloat(lng));
-
-                var infowincontent = document.createElement('div');
-
-                var strong = document.createElement('strong');
-                strong.textContent = "Station no. " + number;
-                infowincontent.appendChild(strong);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text1 = document.createElement('text');
-                text1.textContent = "Full address: " + address;
-                infowincontent.appendChild(text1);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text2 = document.createElement('text');
-                text2.textContent = "Available bikes: " + available_bikes;
-                infowincontent.appendChild(text2);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text3 = document.createElement('text');
-                text3.textContent = "Free stands: " + available_bike_stands;
-                infowincontent.appendChild(text3);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text4 = document.createElement('text');
-                text4.textContent = "Total capacity: " + bike_stands;
-                infowincontent.appendChild(text4);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text5 = document.createElement('text');
-                text5.textContent = "Banking: " + banking;
-                infowincontent.appendChild(text5);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text6 = document.createElement('text');
-                text6.textContent = "Bonus: " + bonus;
-                infowincontent.appendChild(text6);
-                infowincontent.appendChild(document.createElement('br'));
-
-                var text7 = document.createElement('text');
-                text7.textContent = "Status: " + status;
-                infowincontent.appendChild(text7);
-
-
-                var marker = new google.maps.Marker({map: map,
-                                                         position: position,
-                                                         infowincontent: infowincontent});
-                google.maps.event.addListener(marker, 'click', function() {
-                    infoWindow.setContent(this.infowincontent);
-                    infoWindow.open(map, this);
-                });
-            }
-          }
-        }
-
-
-    </script>
+    <script src="js/markers.js">// code for markers</script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&libraries=visualization&callback=initMap">
     </script>
-      <div id="test">111</div>
 
-      <div style="width: 100%; height: 100%;">
-    <canvas id="myChart1" width="740" height="200"></canvas>
+      <div style="width: 100%; height: 40%;">
+    <h1> Chart 1 </h1>
+    <canvas id="myChart1"></canvas>
       </div>
-      <div id="test1">121</div>
-      <div style="width: 100%; height: 100%;">
-    <canvas id="myChart2" width="740" height="200"></canvas>
+    <h1> Chart 2</h1>
+      <div style="width: 100%; height: 40%;">
+    <canvas id="myChart2"></canvas>
       </div>
-    <script src="Chart.js"></script>
+    <h3> Dublin Bike Station usage rate on Rain and Non-Rain days (RedColor: Rain, GreyColor: Non-Rain)</h3>
+      <div style="width: 100%; height: 40%;">
+    <canvas id="myChart"></canvas>
+      </div>
+
+    <div class="w3-container w3-teal">
+        <h1>This is the forecast for Dublin Bike Stations</h1>
+    </div>
+    <p id="selection">This part of code will display 24hrs weather forecast. It takes data from JSON file and
+      triggers using OnClick method</p>
+    <form>
+      <br>
+        <button type ="button" onclick="changeSelection()" id="submitBtn">Click here to see weather</button>
+      <br>
+    </form>
+    <div id="weatherId">   </div>   
+
+    <script src="/charts.js/"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
-    <script>
-        // chart1
-    $.getJSON("Dublin_bike_updated.json", function (json) {
-    var labels = json.map(function(item) {
-      return item.name;
-    });
-    var availableBikes = json.map(function(item){
-      return item.available_bikes;
-    });
-        // Find the top 10 stations;
-    var isSwap;
-    var temp1;
-    var temp2;
-    // sort
-    for(var i=0; i< availableBikes.length;i++){
-        isSwap = false;
-        for (var j = 0; j< availableBikes.length - 1 - i;j++){
-            if(availableBikes[j]<availableBikes[j+1]){
-                isSwap = true;
-                temp1 = availableBikes[j+1];
-                availableBikes[j+1] = availableBikes[j];
-                availableBikes[j] = temp1;
-                temp2 = labels[j+1];
-                labels[j+1] = labels[j];
-                labels[j] = temp2;
-            }
-        }
-        
-    }
-        
-    var NewBikes = new Array(10);
-    var NewLabels = new Array(10);
-    for (var k = 0; k<10;k++){
-        NewBikes[k] = availableBikes[k];
-        NewLabels[k] = labels[k];
-    }
-    document.getElementById("test").innerHTML = NewLabels.length;
- 
-    var data = {
-      labels: NewLabels,
-      datasets: [
-      {
-        label: "available bikes",
-        fillColor: "rgba(10,87,105,0.5)",
-        strokeColor: "rgba(151,187,205,0.8)",
-        highlightFill: "rgba(151,187,205,0.75)",
-        highlightStroke: "rgba(151,187,205,1)",
-        data: NewBikes
-      }
-      ]
-    };
-    var options = {
-        legend: { display: false },
-        title: {
-            display: true,
-            text: 'Find the best 10 stations to take bikes '
-        }
-    };
-    var ctx = document.getElementById("myChart1").getContext("2d");
-    ctx.canvas.width = 1400;
-    ctx.canvas.height = 300;
-
-    var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});
-  });
-    </script>
-      
-    <script>
-      //chart2
-    $.getJSON("Dublin_bike_updated.json", function (json) {
-    var labels = json.map(function(item) {
-      return item.name;
-    });
-    var availableBikes = json.map(function(item){
-      return item.available_bike_stands;
-    });
-        // Find the top 10 stations;
-    var isSwap;
-    var temp1;
-    var temp2;
-    // sort
-    for(var i=0; i< availableBikes.length;i++){
-        isSwap = false;
-        for (var j = 0; j< availableBikes.length - 1 - i;j++){
-            if(availableBikes[j]<availableBikes[j+1]){
-                isSwap = true;
-                temp1 = availableBikes[j+1];
-                availableBikes[j+1] = availableBikes[j];
-                availableBikes[j] = temp1;
-                temp2 = labels[j+1];
-                labels[j+1] = labels[j];
-                labels[j] = temp2;
-            }
-        }
-        
-    }
-        
-    var NewBikes = new Array(10);
-    var NewLabels = new Array(10);
-    for (var k = 0; k<10;k++){
-        NewBikes[k] = availableBikes[k];
-        NewLabels[k] = labels[k];
-    }
-     document.getElementById("test1").innerHTML = NewBikes;
- 
-    var data = {
-      labels: NewLabels,
-      datasets: [
-      {
-        label: "available bikes stands",
-        fillColor: "rgba(10,87,105,0.5)",
-        strokeColor: "rgba(151,187,205,0.8)",
-        highlightFill: "rgba(151,187,205,0.75)",
-        highlightStroke: "rgba(151,187,205,1)",
-        data: NewBikes
-      }
-      ]
-    };
-    var options = {
-        legend: { display: false },
-        title: {
-            display: true,
-            text: 'Find the best 10 stations to return bikes '
-        }
-    };
-    var ctx2 = document.getElementById("myChart2").getContext("2d");
-    ctx2.canvas.width = 1400;
-    ctx2.canvas.height = 300;
-
-    var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});
-  });    
-      </script>
+    <script src="js/chart1.js">// chart1</script>
+    <script src="js/chart2.js"> //chart2</script>
+    <script src="js/chart6.js">//chart6</script>
+    <script src="js/weather.js">//weather</script>
       
   </body>
 </html>

@@ -3,7 +3,7 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
       return item.name;
     });
     var availableBikes = json.map(function(item){
-      return item.available_bikes;
+      return item.available_bike_stands;
     });
         // Find the top 10 stations;
     var isSwap;
@@ -37,8 +37,8 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
       labels: NewLabels,
       datasets: [
       {
-        label: "available bikes",
-        fillColor: "rgb(87, 160, 255)",
+        label: "available bikes stands",
+        fillColor: "rgba(10,87,105,0.5)",
         strokeColor: "rgba(151,187,205,0.8)",
         highlightFill: "rgba(151,187,205,0.75)",
         highlightStroke: "rgba(151,187,205,1)",
@@ -50,12 +50,12 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
         legend: { display: false },
         title: {
             display: true,
-            text: 'Find the best 10 stations to take bikes '
+            text: 'Find the best 10 stations to return bikes '
         }
     };
-    var ctx = document.getElementById("myChart1").getContext("2d");
-    ctx.canvas.width = 950;
-    ctx.canvas.height = 300;
+    var ctx2 = document.getElementById("myChart2").getContext("2d");
+    ctx2.canvas.width = 1400;
+    ctx2.canvas.height = 300;
 
-    var myChart1 = new Chart(ctx).Bar(data, {barShowStroke: true});
-  });
+    var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});
+  });    

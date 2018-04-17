@@ -38,7 +38,7 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
       datasets: [
       {
         label: "available bikes",
-        fillColor: "rgb(87, 160, 255)",
+        fillColor: "rgba(10,87,105,0.5)",
         strokeColor: "rgba(151,187,205,0.8)",
         highlightFill: "rgba(151,187,205,0.75)",
         highlightStroke: "rgba(151,187,205,1)",
@@ -54,7 +54,7 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
         }
     };
     var ctx = document.getElementById("myChart1").getContext("2d");
-    ctx.canvas.width = 950;
+    ctx.canvas.width = 1400;
     ctx.canvas.height = 300;
 
     var myChart1 = new Chart(ctx).Bar(data, {barShowStroke: true});

@@ -72,6 +72,48 @@ def wheather():
 @app.route('/bikeCss.css/')
 def bikeCss():
         return app.send_static_file("bikeCss.css")
+@app.route('/bootstrap.min.css/')
+def bootstrapmincss():
+        return app.send_static_file("bootstrap.min.css")
+@app.route('/font-awesome.min.css/')
+def fontawesomemincss():
+        return app.send_static_file("font-awesome.min.css")
+@app.route('/style.css/')
+def stylecss():
+        return app.send_static_file("style.css")
+@app.route('/modernizr.custom.js/')
+def modernizrcustomjs():
+        return app.send_static_file("modernizr.custom.js")
+@app.route('/jquery-1.11.2.min.js/')
+def jquery1112minjs():
+        return app.send_static_file("jquery-1.11.2.min.js")
+@app.route('/wow.min.js/')
+def wowminjs():
+        return app.send_static_file("wow.min.js")
+@app.route('/owl-carousel.js/')
+def owlcarouseljs():
+        return app.send_static_file("owl-carousel.js")
+@app.route('/nivo-lightbox.min.js/')
+def nivolightboxminjs():
+        return app.send_static_file("nivo-lightbox.min.js")
+@app.route('/smoothscroll.js/')
+def smoothscrolljs():
+        return app.send_static_file("smoothscroll.js")
+@app.route('/bootstrap.min.js/')
+def bootstrapminjs():
+        return app.send_static_file("bootstrap.min.js")
+@app.route('/classie.js/')
+def classiejs():
+        return app.send_static_file("classie.js")
+@app.route('/script.js/')
+def cscriptjs():
+        return app.send_static_file("script.js")
+@app.route('/bike.jpg/')
+def bikejpg():
+        return app.send_static_file("bike.jpg")
+
+
+
 
 @app.route('/charts.min.js/')
 def chartsminjs():
