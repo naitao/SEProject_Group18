@@ -3,8 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title> Prediction Web Page </title>
+        <link rel="stylesheet" href="/bikeCss.css/">
 </head>
   <head>
+<!--
     <style type="text/css">
     footer {
         background-color:black;
@@ -18,6 +20,7 @@
         display: inline-block; //Or display: inline; 
     }
     </style>
+-->
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Information of Bike Station</title>
@@ -40,8 +43,7 @@
 
   <body>
     <div id="map"></div>
-    <div id="prediction" align="center">
-    </div>
+    <section>
     <div>
 	<form align="right" action="/analyze" method="POST" id="analyzing">
         Temperature&nbsp;:(from -10 to 30)
@@ -52,6 +54,7 @@
         <input type="text" name="Wind" value=""><br>
         Bike Station:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1-104)
         <input type="text" name="Number" value=""><br>
+        <p>
         <select name='Weat' form="analyzing">
           <option value=" " selected> SELECT A WEATHER </option>
           <option value="Rain">Rain</option>
@@ -63,6 +66,14 @@
 	</form>
         <link rel="next" href="test.html">
     </div>
+    </section>
+    <aside>
+    <div id="prediction" align="center" style="font-style:italic;font-size:16px;"> 
+    <p> This is the prediction webpage, in which you can provide the day's weather conditons and station number and click the 'submit' button.
+    <p> Then, you will be able to get the predicted bike usage numbers of that bike station in that day.
+    <p> You can also click the Markers which includes the station numbers in above google map, that will show your the details of that Bike Station.
+    </div>
+    </aside>
     <script>
         //var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
         function initMap() {
@@ -147,8 +158,8 @@
         }
         
         var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
-        var out = '<table border="10" width="700"><tr><th rowspan="4"<h1> Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' Bikes in that day';
-        document.getElementById("prediction").style.display = "none";
+        var out = '<table border="10" width="600"><tr><th rowspan="4"<h1> Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' bikes in that day';
+        //document.getElementById("prediction").style.display = "none";
         if (myValue[0].length > 0) {
             document.getElementById("prediction").style.display = "block";
             document.getElementById("prediction").innerHTML = out;

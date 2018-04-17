@@ -100,6 +100,10 @@ def server():
         returnDict = {} 
         #'{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}
         # Then get the data from the form
+        if len(request.form['Number']) == 0 or \
+            len(request.form['Temp']) == 0 or len(request.form['Humi']) == 0 or \
+                len(request.form['Weat']) == 0 or len(request.form['Wind']) == 0:
+                    return render_template('bikeReview.html')
         number = int(request.form['Number'])
         temp = float(request.form['Temp'])
         humidity = int(request.form['Humi'])
@@ -109,8 +113,9 @@ def server():
         myAnalytic = dataAnalytic.dataAnalytic()
         returnDict['location'] = myAnalytic.getBikeStations()[int(number)]
         returnDict['number'] = number
-        returnDict['usedBikes'], returnDict['bikeStands'] = myAnalytic.getPredictionOnStation(temp=temp,humidity=humidity,weather=weather,\
-                                                   windSpeed=windspeed,stationNumber=number)
+        returnDict['usedBikes'], returnDict['bikeStands'] = \
+            myAnalytic.getPredictionOnStation(temp=temp,humidity=humidity,weather=weather,\
+                windSpeed=windspeed,stationNumber=number)
 
         # Generate just a boring response
         return render_template('bikeReview.html', **returnDict)

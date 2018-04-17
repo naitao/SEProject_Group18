@@ -2,6 +2,7 @@ import MySQLdb, json
 import time, os, shutil, datetime, sys
 import pandas as pd
 import numpy as np
+import pickle
 
 import statsmodels.formula.api as sm
 
@@ -28,12 +29,8 @@ class dataAnalytic:
         station_df = dfBike[(dfBike['Number']==stationNumber)]
         return station_df, dfWeather
 
-    def getPredictionOnStation(self,
-                               temp=0,
-                               humidity=0,
-                               weather=None,
-                               windSpeed=0,
-                               stationNumber=1):
+    def importModel(self,
+                    stationNumber=1):
         station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
         if len(station_df) == 0:
             return 0,0
@@ -56,6 +53,50 @@ class dataAnalytic:
         lm_categ = sm.ols(formula="Available_bike_stands ~ Temp + \
                               Humidity + WindSpeed + C(WeatherMain) \
                                   ", data=station_df).fit()
+        file = self.__current_path + "/../../../data/" + str(stationNumber) + '.ols'
+        output = open(file, 'wb')
+        pickle.dump(lm_categ, output)
+        output.close()
+    
+    def getPredictionOnStation(self,
+                               temp=0,
+                               humidity=0,
+                               weather=None,
+                               windSpeed=0,
+                               stationNumber=1):
+        '''
+        station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
+        if len(station_df) == 0:
+            return 0,0
+        for i in station_df.index:
+            bikeStands = station_df.loc[i, 'Bike_stands']
+            s_timeStamp=int(station_df.loc[i, 'TimeStamp'])
+            for j in dfWeather.index:
+                w_timeStamp=int(dfWeather.loc[j, 'Dt'])
+                time_diff = s_timeStamp - w_timeStamp
+                # We assume that the weather conditions within 1 hour
+                # after weatherDetails are in same weather status
+                if time_diff >= 0 and time_diff < 3600:
+                    # print(s_timeStamp)
+                    station_df.loc[i, 'Temp'] = dfWeather.loc[j, 'Temp']
+                    station_df.loc[i, 'Humidity'] = dfWeather.loc[j, 'Humidity']
+                    station_df.loc[i, 'WeatherMain'] = dfWeather.loc[j, 'WeatherMain']
+                    station_df.loc[i, 'WindSpeed'] = dfWeather.loc[j, 'WindSpeed']
+                    station_df.loc[i, 'Rain3H'] = dfWeather.loc[j, 'Rain3H']
+
+        lm_categ = sm.ols(formula="Available_bike_stands ~ Temp + \
+                              Humidity + WindSpeed + C(WeatherMain) \
+                                  ", data=station_df).fit()
+        '''
+        station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
+        for i in station_df.index:
+            if station_df.loc[i, 'Number'] == stationNumber:
+                bikeStands = station_df.loc[i, 'Bike_stands']
+                break
+        file = self.__current_path + "/../../../data/" + str(stationNumber) + '.ols'
+        pkl_file = open(file, 'rb')
+        lm_categ = pickle.load(pkl_file)
+
         x_new = pd.DataFrame({'Temp':[temp],
                               'Humidity':[humidity],
                               'WeatherMain':[weather],
@@ -374,6 +415,11 @@ class dataAnalytic:
 def main():
     myAnalytic = dataAnalytic()
     print(myAnalytic.getBikeStations()[3])
+    #myAnalytic.importModel(7)
+    
+    for i in range(1, 105):
+        print("Station: " + str(i))
+        myAnalytic.importModel(i)
     #print(oneWeekWeather)
     #w_analytics = analyzingOnWeather(oneWeekWeather)
     #print(w_analytics)
@@ -387,12 +433,12 @@ def main():
     #myAnalytic.getOneMonthData(weather_dict, bike_dict)
     #myAnalytic.insertClockToMysql()
     '''
-    for number in range(22,25):
+    for number in range(7, 8):
         prediction, bikeStands = myAnalytic.getPredictionOnStation(temp=15,humidity=75,weather='Rain',\
                                                    windSpeed=5,stationNumber=number)
         print("Bike Station {} will be used {}/{} bikes at that time".format(number, prediction, bikeStands))
         time.sleep(1)
     '''
+
 if __name__ == '__main__': 
     main()
-
