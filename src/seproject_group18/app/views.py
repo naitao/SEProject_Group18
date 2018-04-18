@@ -13,12 +13,14 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
 
+'''
 @app.route('/') 
 def index(): 
         returnDict = {} 
         returnDict['user'] = 'COMP30670'    # Feel free to put your name here! 
         returnDict['title'] = 'Home' 
         return render_template("index.html", **returnDict)
+'''
 
 @app.route('/weather/') 
 def weather(): 
@@ -44,9 +46,9 @@ def bikeReview():
 def icon(name): 
         return render_template("{}".format(name))
 
-@app.route('/bike5/') 
-def bike5():
-        return render_template("bike5.html")
+@app.route('/') 
+def index():
+        return render_template("index.html")
 @app.route('/bike5json/')
 def bike5json():
         return app.send_static_file("Dublin_bike_updated.json")
