@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/style.css/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/modernizr.custom.js/"></script>
+    <script src="/markers.js/">// code for markers</script>
     
 </head>
 
@@ -73,25 +74,65 @@
             <div class="virticle-line"></div>
             <div class="circle"></div>
             <div id="map"></div>
-            <script src="/markers.js/">// code for markers</script>
-            <script async defer
+     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-JwqLtuvHobOKXLxrkkn4I5XcgbcB8AE&libraries=visualization&callback=initMap">
     </script>
-            <p>
-                Use google map to get the basic information about bike stations
-            </p>
         </div> <!-- /.container -->
     </div> <!-- /#video -->
+    <div id="chart1">Prediction of Available Bikes in Dublin</div>
+    <section id="predict" class="wrapper1">
+    <div>
+	<form align="right" action="/analyze" method="POST" id="analyzing">
+        Temperature&nbsp;:(from -10 to 30)
+        <input type="text" name="Temp" value=""><br>
+        Humidity:&emsp;&nbsp;&nbsp;&nbsp;(from 70 to 100)
+        <input type="text" name="Humi" value=""><br>
+        WindSpeed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(from 0 to 20)
+        <input type="text" name="Wind" value=""><br>
+        Bike Station:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1-104)
+        <input type="text" name="Number" value=""><br>
+        <p>
+        <select name='Weat' form="analyzing">
+          <option value=" " selected> SELECT A WEATHER </option>
+          <option value="Rain">Rain</option>
+          <option value="Clouds">Clouds</option>
+          <option value="Clear">Clear</option>
+        </select>
+         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        <input style="color: rgb(87,160,255);" type="submit" value="Predict"">
+	</form>
+        <link rel="next" href="test.html">
+    </div>
+    </section> <!-- /#predict -->
+    <aside>
+    <div id="prediction" align="center" style="font-style:italic;font-size:16px;"> 
+    <p> This is the prediction webpage, in which you can provide the day's weather conditons and station number and click the 'submit' button.
+    Then, you will be able to get the predicted bike usage numbers of that bike station in that day.
+    You can also click the Markers which includes the station numbers in above google map, that will show your the details of that Bike Station.
+    </div>
+    </aside>
+<script>
+        function handleClick() {
+            location.href = "#map";
+        }
+        var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
+        var out = '<font size="6" color="rgb(87,160,255)"> <table height="100" width="700"><tr><th>Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' bikes in that day </th></tr></table></font>';
+        //document.getElementById("prediction").style.display = "none";
+        if (myValue[0].length > 0) {
+            document.getElementById("prediction").style.display = "block";
+            document.getElementById("prediction").innerHTML = out;
+            handleClick();
+        }
+</script>
 
     <!-- HHHHHHHHHHHHHHHHHH        Chart1         HHHHHHHHHHHHHHHH -->
+    <br>
     <section id="Chart1" class="img-block-3col wrapper">
 
         <div class="container">
 
             <div class="row">
-                <div id="chart1">The top 10 bike stations to take bikes</div>
-                
-
+                <div id="chart1">The 10 stations with the most available bikes</div>
                      <div style="width: 100%; height: 40%;">
                        <canvas id="myChart1"></canvas>
       </div>
@@ -107,9 +148,7 @@
         <div class="container">
 
             <div class="row">
-                <div id="chart1">The top 10 bike stations to return bikes</div>
-                
-
+                <div id="chart1">The 10 stations with most available bike stands</div>
                      <div style="width: 100%; height: 40%;">
                        <canvas id="myChart2"></canvas>
       </div>
@@ -126,7 +165,7 @@
         <div class="container">
 
             <div class="row">
-                <div id="chart1">The weather influence on rain or not</div>
+                <div id="chart1">The weather influence on rain (Blue) and non-rain (Grey)</div>
                 
 
                      <div style="width: 100%; height: 40%;">
@@ -151,7 +190,7 @@
       triggers using OnClick method</p>
     <form>
     <br>
-    <button type ="button" onclick="changeSelection()" id="submitBtn">Click here to see weather</button>
+    <button style="color:rgb(87,160,255);" type="button" onclick="changeSelection()" id="submitBtn">Click here to see weather</button>
     <br>
     </form>
     <div id="weatherId"></div>
@@ -160,9 +199,6 @@
     </section> 
     
     <!-- HHHHHHHHHHHHHHHHHH        Data Analysis          HHHHHHHHHHHHHHHH -->
-    <section id="predict" class="wrapper">
-        
-    </section> <!-- /#predict -->
 
     <!-- HHHHHHHHHHHHHHHHHH        Footer          HHHHHHHHHHHHHHHH -->
 
@@ -194,11 +230,11 @@
         <nav>
         <ul>
             <li class="hideit"><a href="#header">Home</a></li>
+            <li class="hideit"><a href="#map">Prediction</a></li>
             <li class="hideit"><a href="#Chart1">Take Bikes</a></li>
             <li class="hideit"><a href="#Chart2">Return Bikes</a></li>
             <li class="hideit"><a href="#Chart6">Weather Influenece</a></li>
             <li class="hideit"><a href="#weather">Weather Information</a></li>
-            <li class="hideit"><a href="#predict">Prediction</a></li>
         </ul>
         </nav>
     </div>

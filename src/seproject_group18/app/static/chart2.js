@@ -54,7 +54,7 @@ $.getJSON("Dublin_bike_updated.json", function (json) {
         }
     };
     var ctx2 = document.getElementById("myChart2").getContext("2d");
-    ctx2.canvas.width = 950;
+    ctx2.canvas.width = 1100;
     ctx2.canvas.height = 300;
 
     var myChart2 = new Chart(ctx2).Bar(data, {barShowStroke: false});

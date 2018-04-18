@@ -13,14 +13,11 @@ $.getJSON("Dublin_Chart_6.json", function (json) {
       	RainRate[i] = Rate[i].Rain;
       	nonRainRate[i] = Rate[i].NonRain;
   }
-  //document.write(RainRate[1], RainRate[2], RainRate[13], 000, Rate.length);
-  //document.write(labels[0]);
   var data = {
     labels: labels,
     datasets: [
     {
       label: "Rain",
-      //fillColor: "rgba(220,220,220,0.5)",
       fillColor: "rgb(87, 160, 255)",
       strokeColor: "rgba(220,220,220,0.8)",
       highlightFill: "rgba(220,220,220,0.75)",
@@ -45,7 +42,7 @@ $.getJSON("Dublin_Chart_6.json", function (json) {
       }
   }
   var ctx = document.getElementById("myChart").getContext("2d");
-  ctx.canvas.width = 950;
+  ctx.canvas.width = 1100;
   ctx.canvas.height = 300;
 
   var myChart = new Chart(ctx).Bar(data, {barShowStroke: false});

@@ -1,7 +1,6 @@
 
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
-/*
 input[type="text"]
 {
     font-size:18px;
@@ -15,6 +14,15 @@ input[type="submit"]
 form, select{
   font-size:18px;
 }
+.wrapper1 {
+  	width:650px;
+        float:left;
+        padding:10px;
+}
+aside {
+  padding:20px;
+}
+/*
 header {
   backgound-color:black;
         color:white;
@@ -29,14 +37,6 @@ nav {
         width:100px;
         float:left;
         padding:5px;
-}
-section {
-  width:650px;
-        float:left;
-        padding:10px;
-}
-aside {
-  padding:20px;
 }
 footer {
       background-color:black;

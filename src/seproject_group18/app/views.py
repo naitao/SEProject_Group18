@@ -136,9 +136,11 @@ def stationChart6():
 def chart7():
         return app.send_static_file("Dublin_Chart_7.json")
 
-@app.route('/test/')
-def test():
-    return render_template('test.html')
+'''
+@app.route('/predict.js/')
+def predict():
+    return app.send_static_file("predict.js")
+'''
 
 @app.route('/analyze', methods=['GET', 'POST'])
 def server():
@@ -149,7 +151,7 @@ def server():
         if len(request.form['Number']) == 0 or \
             len(request.form['Temp']) == 0 or len(request.form['Humi']) == 0 or \
                 len(request.form['Weat']) == 0 or len(request.form['Wind']) == 0:
-                    return render_template('bikeReview.html')
+                    return render_template('index.html')
         number = int(request.form['Number'])
         temp = float(request.form['Temp'])
         humidity = int(request.form['Humi'])
@@ -164,8 +166,8 @@ def server():
                 windSpeed=windspeed,stationNumber=number)
 
         # Generate just a boring response
-        return render_template('bikeReview.html', **returnDict)
+        return render_template('index.html', **returnDict)
 
     # Otherwise this was a normal GET request
     else:   
-        return render_template('bike5.html')
+        return render_template('index.html')
