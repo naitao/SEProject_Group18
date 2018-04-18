@@ -29,11 +29,11 @@ class Bikeinfo(Thread):
             response = None
         return response
         
-    def toMute(self):  #抑制输出
+    def toMute(self):
         self.nulObj = open(os.devnull, 'w')
         sys.stdout = self.nulObj
 
-    def toCons(self):  #标准输出重定向至控制台
+    def toCons(self):
         sys.stdout = self.savedStdout #sys.__stdout__
 
     def to_json(self, json_file=None):
@@ -168,7 +168,6 @@ class Bikeinfo(Thread):
 # Bike info
 bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'
 mybike = Bikeinfo(bike_url)
-#mybike.to_json()
 mybike.to_csv()
 # Only for the first time for creating table
 #mybike.import_to_mysql(mode='init')
@@ -180,6 +179,7 @@ def main():
     bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'
     mybike = Bikeinfo(bike_url)
     while True:
+        mybike.to_json()
         mybike.to_csv()
         mybike.import_to_mysql()
         mybike.import_to_mysql(mode='incr')

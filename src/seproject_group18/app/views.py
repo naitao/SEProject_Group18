@@ -29,6 +29,7 @@ def weather():
 @app.route('/weatherjson/') 
 def weatherjsion(): 
         return app.send_static_file("Dublin_weather_updated.json")
+'''
 @app.route('/bike/') 
 def bike(): 
         #myAnalytic = dataAnalytic.dataAnalytic()
@@ -38,6 +39,7 @@ def bike():
         
         returnDict['rate'], returnDict['bikeStands'] = "A", "B"
         return render_template("bike.html", **returnDict)
+'''
 @app.route('/bikeReview/') 
 def bikeReview(): 
         return render_template("bikeReview.html")
@@ -77,9 +79,9 @@ def bikeCss():
 @app.route('/bootstrap.min.css/')
 def bootstrapmincss():
         return app.send_static_file("bootstrap.min.css")
-@app.route('/font-awesome.min.css/')
-def fontawesomemincss():
-        return app.send_static_file("font-awesome.min.css")
+@app.route('/font-awesome.css/')
+def fontawesomecss():
+        return app.send_static_file("font-awesome.css")
 @app.route('/style.css/')
 def stylecss():
         return app.send_static_file("style.css")
