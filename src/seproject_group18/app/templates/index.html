@@ -116,7 +116,7 @@
             location.href = "#map";
         }
         var myValue = ['{{ number }}', '{{ location }}', '{{ usedBikes}}', '{{ bikeStands }}'];
-        var out = '<font size="6" color="rgb(87,160,255)"> <table height="100" width="700"><tr><th>Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' bikes in that day </th></tr></table></font>';
+        var out = '<font size="6" color="rgb(87,160,255)"> <table height="100" width="700"><tr><th>Bike Staton NO.' + myValue[0] + '(' + myValue[1] + ') will be used ' + myValue[2] + '/' + myValue[3] + ' bikes in average on that day </th></tr></table></font>';
         //document.getElementById("prediction").style.display = "none";
         if (myValue[0].length > 0) {
             document.getElementById("prediction").style.display = "block";

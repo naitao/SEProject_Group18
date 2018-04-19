@@ -13,33 +13,6 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
 
-'''
-@app.route('/') 
-def index(): 
-        returnDict = {} 
-        returnDict['user'] = 'COMP30670'    # Feel free to put your name here! 
-        returnDict['title'] = 'Home' 
-        return render_template("index.html", **returnDict)
-'''
-
-@app.route('/weather/') 
-def weather(): 
-        return render_template("forecaster_updated.html")
-
-@app.route('/weatherjson/') 
-def weatherjsion(): 
-        return app.send_static_file("Dublin_weather_updated.json")
-'''
-@app.route('/bike/') 
-def bike(): 
-        #myAnalytic = dataAnalytic.dataAnalytic()
-        #bikeStands,rate = myAnalytic.getOneWeekBikeData()
-        returnDict = {}
-        returnDict['title'] = "COMP30430"    # Feel free to put your name here! 
-        
-        returnDict['rate'], returnDict['bikeStands'] = "A", "B"
-        return render_template("bike.html", **returnDict)
-'''
 @app.route('/bikeReview/') 
 def bikeReview(): 
         return render_template("bikeReview.html")
@@ -116,9 +89,6 @@ def cscriptjs():
 def bikejpg():
         return app.send_static_file("bike.jpg")
 
-
-
-
 @app.route('/charts.min.js/')
 def chartsminjs():
         return app.send_static_file("Chart.min.js")
@@ -136,12 +106,6 @@ def stationChart6():
 def chart7():
         return app.send_static_file("Dublin_Chart_7.json")
 
-'''
-@app.route('/predict.js/')
-def predict():
-    return app.send_static_file("predict.js")
-'''
-
 @app.route('/analyze', methods=['GET', 'POST'])
 def server():
     if request.method == 'POST':
@@ -150,8 +114,9 @@ def server():
         # Then get the data from the form
         if len(request.form['Number']) == 0 or \
             len(request.form['Temp']) == 0 or len(request.form['Humi']) == 0 or \
-                len(request.form['Weat']) == 0 or len(request.form['Wind']) == 0:
-                    return render_template('index.html')
+                len(request.form['Weat']) == 0 or len(request.form['Wind']) == 0 \
+                    or int(request.form['Number']) == 20:
+                        return render_template('index.html')
         number = int(request.form['Number'])
         temp = float(request.form['Temp'])
         humidity = int(request.form['Humi'])

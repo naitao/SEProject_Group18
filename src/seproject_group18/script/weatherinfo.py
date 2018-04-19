@@ -57,7 +57,6 @@ class Weatherinfo(Thread):
             filename = self.current_path + '/../../../data/' + csv_file
         reader = codecs.getreader("utf-8")
         if response is not None:
-            #data = list(json.load(reader(response)))
             data = json.load(reader(response))
             csv_keys = ['dt', 'main', 'weather', 'clouds', 'wind', 'rain', 'sys', 'dt_txt']
             with open(filename, 'w', newline='') as csv_stream:
@@ -125,7 +124,7 @@ class Weatherinfo(Thread):
                     except Exception as e:
                         print("Error: can get csv data: " + filename)
                         print(str(e))
-                        break
+                        return 1
 
             self.__csv_file = filename
 
@@ -157,6 +156,7 @@ class Weatherinfo(Thread):
             cursor = mydb.cursor()
         except Exception as e:
             print(str(e))
+            return 1
 
         csv_data = csv.reader(open(filename, 'r'))
         for row in csv_data:
@@ -203,27 +203,11 @@ class Weatherinfo(Thread):
         cursor.close()
 
 
-
-'''
-# WEATHER INFORMATION
-# Current weather info (2 ways)
-#weather_url = 'http://api.openweathermap.org/data/2.5/weather?id=2964574&appid=3641377121f997a81e12f28ba9831df1'
-#weather_url = 'http://api.openweathermap.org/data/2.5/weather?q=Dublin&appid=3641377121f997a81e12f28ba9831df1'
-
-# 5 Days weather info (Detailed weather information)
-weather_url = 'http://api.openweathermap.org/data/2.5/forecast/?id=7778677&mode=json&units=metric&APPID=19b104f014c41d11939f615df3a80edf'
-myweather = Weatherinfo(weather_url)
-myweather.to_json()
-myweather.to_csv()
-
-# Only for the first time for creating table
-#myweather.import_to_mysql(mode='init')
-# Regulare updating DB with APIs
-myweather.import_to_mysql()
-'''
-
 def main():
     weather_url = 'http://api.openweathermap.org/data/2.5/forecast/?id=7778677&mode=json&units=metric&APPID=19b104f014c41d11939f615df3a80edf'
+    #current weather information is not available so far
+    #currentWeather_url = 'http://api.openweathermap.org/data/2.5/weather?id=2964574&appid=3641377121f997a81e12f28ba9831df1'
+    #currentweather = Weatherinfo(currentWeather_url)
     myweather = Weatherinfo(weather_url)
     myAnalytic = dataAnalytic.dataAnalytic()
     myweather.to_csv()

@@ -15,7 +15,7 @@ class makeCSV:
         self.__bike_db = 'bike'
         self.__current_path = os.path.dirname(os.path.abspath(__file__))
 
-    def writeToBikeCSV(self):
+    def writeToBikeCSV(self, limit=2000, file=None):
         now = int(time.time())
         #current_time = now % (3600*24)
         now_days = int(now/(3600*24))
@@ -30,7 +30,7 @@ class makeCSV:
         intervalRate = []
         intervalRecord = {}
         cursor.execute('select * from BikeStationHistory order \
-                           by Last_update desc LIMIT 2000')
+                           by Last_update desc LIMIT {}'.format(limit))
         row = cursor.fetchone()
         d = { 'Number':[],
               'Available_bike_stands':[],
@@ -60,11 +60,14 @@ class makeCSV:
             row = cursor.fetchone()
         mydb.commit()
         cursor.close()
-        file = self.__current_path + "/../../../data/bikeStation.csv"
+        if file is None:
+            file = self.__current_path + "/../../../data/bikeStation.csv"
+        else:
+            file = self.__current_path + "/../../../data/" + file
         df.to_csv(file,index=False)
         print("Bike CSV writting finished!")
 
-    def writeToWeatherCSV(self):
+    def writeToWeatherCSV(self, limit=200, file=None):
         try:
             mydb = MySQLdb.connect(host=self. __mysql_host,
                                    user = self.__mysql_user,
@@ -86,7 +89,7 @@ class makeCSV:
                   'Clock':[],
                   'day':[]}
         df2 = pd.DataFrame(data=w_dict)
-        cursor.execute('select * from WeatherDetails order by Dt')
+        cursor.execute('select * from WeatherDetails order by Dt LIMIT {}'.format(limit))
         row = cursor.fetchone()
         while row is not None:
             timestamp = int(row[0].strip("'"))
@@ -104,13 +107,20 @@ class makeCSV:
             row = cursor.fetchone()
         mydb.commit()
         cursor.close()
-        file = self.__current_path + "/../../../data/weatherDetails.csv"
+        if file is None:
+            file = self.__current_path + "/../../../data/weatherDetails.csv"
+        else:
+            file = self.__current_path + "/../../../data/" + file
         df2.to_csv(file,index=False)
         print("Weather CSV writting finished!")
 
 def main():
     my = makeCSV()
-    my.writeToBikeCSV()
+    # Collect MySQL data from RDS and re-write them into particular csv files in
+    # order to let dataAnalytics script analyzing the data frequently and efficiently.
+    # It will be executed manually or automatically once per month/season/year, thus
+    # this executable script could be added into cron job.
+    my.writeToBikeCSV(limit=200000)
     my.writeToWeatherCSV()
 
 

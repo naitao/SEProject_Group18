@@ -29,10 +29,6 @@ class Bikeinfo(Thread):
             response = None
         return response
         
-    def toMute(self):
-        self.nulObj = open(os.devnull, 'w')
-        sys.stdout = self.nulObj
-
     def toCons(self):
         sys.stdout = self.savedStdout #sys.__stdout__
 
@@ -49,6 +45,7 @@ class Bikeinfo(Thread):
             except Exception as e:
                 print("Warning: Can not open " + filename)
                 print(e)
+                return 1
             f.close()
             self.__json_file = filename
         else:       
@@ -100,7 +97,7 @@ class Bikeinfo(Thread):
                     except Exception as e:
                         print("Error: can get csv data: " + filename)
                         print(str(e))
-                        break
+                        return 1
 
             self.__csv_file = filename
 
@@ -126,6 +123,7 @@ class Bikeinfo(Thread):
             cursor = mydb.cursor()
         except Exception as e:
             print(str(e))
+            return 1
 
         csv_data = csv.reader(open(filename, 'r'))
         for row in csv_data:
@@ -163,17 +161,6 @@ class Bikeinfo(Thread):
         #close the connection to the database.
         mydb.commit()
         cursor.close()
-
-'''
-# Bike info
-bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'
-mybike = Bikeinfo(bike_url)
-mybike.to_csv()
-# Only for the first time for creating table
-#mybike.import_to_mysql(mode='init')
-mybike.import_to_mysql(mode='incr')
-
-'''
 
 def main():
     bike_url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=7ecf9f5fd2eae31adbf96d743cae7c173f850c11'

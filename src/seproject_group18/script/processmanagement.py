@@ -35,11 +35,3 @@ class ProcessManagement:
         except:
             pass
         return not self.isProcessRunning()
-
-'''
-#print(isProcessRunning('run.py'))
-# ProcessManagement([pattern1, pattern2, pattern3])
-# pattern1 or pattern2 + pattern3
-my_process = ProcessManagement(['run.py', 'dublinbike', 'allstart'])
-my_process.killProcessRunning()
-'''

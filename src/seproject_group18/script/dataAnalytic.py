@@ -21,6 +21,9 @@ class dataAnalytic:
     def getBikeStations(self):
         return self.__bikeStation
 
+    def getBikeStation(self, number):
+        return self.getBikeStations()[number]
+
     def __getTrainingDataFrame(self, stationNumber):
         bikeStationFile = self.__current_path + "/../../../data/bikeStation.csv"
         weatherDetailsFile = self.__current_path + "/../../../data/newWeatherDetails.csv"
@@ -64,34 +67,10 @@ class dataAnalytic:
                                weather=None,
                                windSpeed=0,
                                stationNumber=1):
-        '''
-        station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
-        if len(station_df) == 0:
-            return 0,0
-        for i in station_df.index:
-            bikeStands = station_df.loc[i, 'Bike_stands']
-            s_timeStamp=int(station_df.loc[i, 'TimeStamp'])
-            for j in dfWeather.index:
-                w_timeStamp=int(dfWeather.loc[j, 'Dt'])
-                time_diff = s_timeStamp - w_timeStamp
-                # We assume that the weather conditions within 1 hour
-                # after weatherDetails are in same weather status
-                if time_diff >= 0 and time_diff < 3600:
-                    # print(s_timeStamp)
-                    station_df.loc[i, 'Temp'] = dfWeather.loc[j, 'Temp']
-                    station_df.loc[i, 'Humidity'] = dfWeather.loc[j, 'Humidity']
-                    station_df.loc[i, 'WeatherMain'] = dfWeather.loc[j, 'WeatherMain']
-                    station_df.loc[i, 'WindSpeed'] = dfWeather.loc[j, 'WindSpeed']
-                    station_df.loc[i, 'Rain3H'] = dfWeather.loc[j, 'Rain3H']
-
-        lm_categ = sm.ols(formula="Available_bike_stands ~ Temp + \
-                              Humidity + WindSpeed + C(WeatherMain) \
-                                  ", data=station_df).fit()
-        '''
         station_df, dfWeather = self.__getTrainingDataFrame(stationNumber)
         for i in station_df.index:
             if station_df.loc[i, 'Number'] == stationNumber:
-                bikeStands = station_df.loc[i, 'Bike_stands']
+                bikeStands = int(station_df.loc[i, 'Bike_stands'])
                 break
         file = self.__current_path + "/../../../data/" + str(stationNumber) + '.ols'
         pkl_file = open(file, 'rb')
@@ -206,10 +185,8 @@ class dataAnalytic:
                 weather = k
                 if int(v[0]) == 0:
                     mydict['rate'][weather]=0
-                    #intervalRate[key][k] = 0
                 else:
                     mydict['rate'][weather]=round(float(v[1])/float(v[0]),2)
-                    #intervalRate[key][k] = round(float(v[1])/float(v[0]),2)
             intervalRate.append(mydict)
         mydb.commit()
         cursor.close()
@@ -331,8 +308,6 @@ class dataAnalytic:
                 cursor.execute('select Weather_Main from WeatherDetails where Dt=%s', [key])
                 row_weather = cursor.fetchone()[0].strip("'")
                 oneWeekWeather[int(key.strip("'"))] = [row_weather, t[key][1]]
-            #cursor.execute('select * from WeatherDetails where Dt=%s', [key])
-            #cursor.execute('update WeatherDetails set Dt_txt=%s where Dt=%s',[t[key], key])
 
         mydb.commit()
         cursor.close()
@@ -395,17 +370,13 @@ class dataAnalytic:
             else:
                 clock = int(timestamp/1000 % (3600*24) / 3600)
                 timeDict[row[11]] = clock
-                #print(count, row[11], clock, weekago*1000)
-            #if count >= 10:
-            #    break;
-            #count = count + 1
             row = cursor.fetchone()
         print(len(timeDict.keys()))
         count = 0
         for key, value in timeDict.items():
             count = count + 1
-            #print("key=", key, ",value=", value)
-            cursor.execute('UPDATE BikeStationHistory SET Clock = %s WHERE Last_update = %s', (value, key))
+            cursor.execute('UPDATE BikeStationHistory SET Clock = %s WHERE Last_update = %s', \
+                (value, key))
             if count % 200 == 0:
                 print("Counting: ", count, key)
         mydb.commit()
@@ -414,31 +385,11 @@ class dataAnalytic:
 
 def main():
     myAnalytic = dataAnalytic()
-    print(myAnalytic.getBikeStations()[3])
-    #myAnalytic.importModel(7)
     
+    # Dump training model into particular files for each station
     for i in range(1, 105):
         print("Station: " + str(i))
         myAnalytic.importModel(i)
-    #print(oneWeekWeather)
-    #w_analytics = analyzingOnWeather(oneWeekWeather)
-    #print(w_analytics)
-    #bikeStands, rates = myAnalytic.getOneWeekBikeData()
-    #print(rates, bikeStands)
-    #dict = myAnalytic.getOneDayPerWeekBikeData()
-    #print(dict)
-    #myAnalytic.writeToJson()
-
-    #weather_dict, bike_dict = myAnalytic.createInputData()
-    #myAnalytic.getOneMonthData(weather_dict, bike_dict)
-    #myAnalytic.insertClockToMysql()
-    '''
-    for number in range(7, 8):
-        prediction, bikeStands = myAnalytic.getPredictionOnStation(temp=15,humidity=75,weather='Rain',\
-                                                   windSpeed=5,stationNumber=number)
-        print("Bike Station {} will be used {}/{} bikes at that time".format(number, prediction, bikeStands))
-        time.sleep(1)
-    '''
 
 if __name__ == '__main__': 
     main()
