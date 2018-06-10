@@ -5,7 +5,7 @@ This is SEProject Group18 Web Application Final Code repo
 
 Description
 ===========
-1.How to install this web application
+1.How to a install this web application
 
 	1)Deploy EC2 install Linux (ubuntu) and RDS MySQL first, make sure both Operation and MySQL Server all work well. Our MySQL information:
 		Hostname: ucdgroup18.ck04mjz0uhn8.us-west-2.rds.amazonaws.com
